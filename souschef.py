@@ -43,7 +43,7 @@ class BritishCouncilChef(SushiChef):
 
     def construct_channel(self, **kwargs):
         channel = self.get_channel(**kwargs)
-        node = indiv.perseus_demo()
+        node = indiv.perseus_demo_node()
         channel.add_child(node)
         return channel
     
