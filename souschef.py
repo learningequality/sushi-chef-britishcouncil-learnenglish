@@ -7,11 +7,11 @@ import logging
 from ricecooker.chefs import SushiChef
 
 
-import indiv
+import quiz
 #import requests
 #from le_utils.constants import licenses
-#from ricecooker.classes.nodes import DocumentNode, VideoNode, TopicNode
-#from ricecooker.classes.files import HTMLZipFile, VideoFile, SubtitleFile, DownloadFile
+from ricecooker.classes.nodes import DocumentNode, VideoNode, TopicNode, 
+from ricecooker.classes.files import HTMLZipFile, VideoFile, SubtitleFile, DownloadFile
 #import json 
 #from collections import OrderedDict
 #from index_lessons import crawl_lesson_index
@@ -43,7 +43,8 @@ class BritishCouncilChef(SushiChef):
 
     def construct_channel(self, **kwargs):
         channel = self.get_channel(**kwargs)
-        node = indiv.perseus_demo_node()
+        #node = quiz.do_it()
+        node = 
         channel.add_child(node)
         return channel
     

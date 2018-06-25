@@ -22,6 +22,10 @@ multiple_choice_game_url = "http://learnenglish.britishcouncil.org/en/english-gr
 multiple_choice_game_xml_url = indiv.get_individual_page(multiple_choice_game_url)[0]
 multiple_choice_game_soup = indiv.handle_xml(multiple_choice_game_xml_url)
 
+x = "http://learnenglish.britishcouncil.org/en/vocabulary-exercises/appearance-1"
+x_xml_url_1 = indiv.get_individual_page(x)[0]
+x_1_soup = indiv.handle_xml(x_xml_url_1)
+
 __unique_id = 0
 def unique_id():
     global __unique_id
@@ -32,6 +36,8 @@ templates = {}
 
 with open("templates/multiple_choice_game.template") as f:
     templates['MultipleChoiceGame'] = f.read()
+    
+templates["MatchingGame"] = "" # TODO
 
 """
 key elements:
@@ -43,10 +49,18 @@ Two Column Matcher: [[☃ matcher 1]] A->1, B->3, C->2
 Video: [[☃ video 1]] -- if it works!
 """
 
+# I believe we can use html in question strings -- <img src=...> has special handling
+
+
 class Quiz(object):
     def __init__(self):
         self.questions = []
+        self.tag = None
+        self.title = None
         
+    def __repr__(self):
+        return str(self.tag) + ":\n" + "\n".join(str(x) for x in self.questions)
+    
     def from_soup(self, soup):
         assert not self.questions
         self.tag = list(soup.children)[0].name
@@ -65,7 +79,7 @@ class Quiz(object):
         # GapFillQuestionItems .....
         
         # ... GapFillQuestionItem/Prefix, /Answer, /Suffix -> text
-        if self.tag == "GapFillGame":  # WRONG
+        if self.tag == "GapFillGame":  # WRONG -- FIX AS DROPDOWN -- TODO
             gap_fill_questions = soup.find_all("GapFillQuestionItem")
             q['question_triplets'] = []
             for question in gap_fill_questions:
@@ -73,7 +87,7 @@ class Quiz(object):
                                                question.find("Answer").text,
                                                question.find("Suffix").text])
                 
-        if self.tag == "MultipleChoiceGame":
+        elif self.tag == "MultipleChoiceGame":
             multiple_choice_options = soup.find_all("Option")
             q['global_options'] = OrderedDict()
             for tag in multiple_choice_options:
@@ -90,8 +104,15 @@ class Quiz(object):
                 correct = [str(x == answer_number).lower() for x in q['global_options']]
                 # hint = []
                 # correct = the one we're considering matching answer_number
-                q['triplets'] = zip(answers, hints, correct)
+                q['triplets'] = list(zip(answers, hints, correct))
                 self.questions.append(copy.deepcopy(q))
+                
+        elif self.tag == "MatchingGame":
+            print (q)
+            print()
+            
+        else:
+            raise RuntimeError(self.tag)
         
         return self
     
@@ -131,9 +152,20 @@ class Question(dict):
                 )
 
 #print (multiple_choice_game_soup.prettify())
-quiz = Quiz().from_soup(multiple_choice_game_soup)
-for question in quiz.questions:
-    print (question.apply_template(templates['MultipleChoiceGame']))
-    
-print (quiz.as_node())
+
+def multiple_choice_game():
+    quiz = Quiz().from_soup(multiple_choice_game_soup)
+    return quiz.as_node()
+
+def x1():
+    quiz = Quiz().from_soup(x_1_soup)
+    print(quiz)
+    return quiz.as_node()
+
+def do_it():
+    return x1()
+        
+
+if __name__ == "__main__":
+    print(do_it())
 

@@ -15,7 +15,7 @@
                             "content": "{{content}}",
                             "clue": "{{clue}}",
                             "correct": {{correct}}
-                        },
+                        }{% if forloop.last %}{% else %},{% endif %}
                     {% endfor %}
                     ],
                     "randomize": false,
