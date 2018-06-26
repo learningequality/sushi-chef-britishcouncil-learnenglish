@@ -8,10 +8,24 @@ request_headers = {"User-Agent": "Mozilla"}
 requests_cache.install_cache()
 import lxml.etree
 
+def html_soup(url):
+    html = requests.get(url, headers=request_headers)
+    soup = BeautifulSoup(html.content, "html5lib") # html5lib handles encodings, so throw raw bytes at it with .content
+    return soup
+    
+def xml_soup(url):
+    html = requests.get(url, headers=request_headers)
+    soup = BeautifulSoup(html.text, "xml") # note: use .text to decode UTF-8 properly rather than just having bytes
+    return soup
+
+def quiz_links(soup):
+    body = (soup.find("article").find("div", {"class": "field-name-body"}))
+    xml_elements = (body.find_all("a", {"class": "embed"}))
+    urls = [a.attrs['href'].strip() for a in xml_elements]
+    return urls
 
 def individual(url = "https://learnenglish.britishcouncil.org/en/youre-hired/episode-03"):
-    html = requests.get(url, headers=request_headers)
-    soup = BeautifulSoup(html.text, "html5lib")
+    soup = html_soup(url)
     article = soup.find("article")
     
     # delete the comments
@@ -35,6 +49,12 @@ def individual(url = "https://learnenglish.britishcouncil.org/en/youre-hired/epi
         vid.replaceWith(video)
     
     return article
+
+def get_individual_page(url):
+    # from old version: used by quiz
+    # get all 
+    soup = html_soup(url)
+    return quiz_links(soup)
         
 def output_html(soup):
     with open("output.html", "w")  as f:

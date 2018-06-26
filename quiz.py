@@ -16,15 +16,15 @@ from ricecooker.classes.questions import PerseusQuestion
 
 gap_fill_game_url = "http://learnenglish.britishcouncil.org/en/quick-grammar/adjectives-prepositions"
 gap_fill_game_xml_url = indiv.get_individual_page(gap_fill_game_url)[0]
-gap_fill_game_soup = indiv.handle_xml(gap_fill_game_xml_url)
+gap_fill_game_soup = indiv.xml_soup(gap_fill_game_xml_url)
 
 multiple_choice_game_url = "http://learnenglish.britishcouncil.org/en/english-grammar/past-tense"
 multiple_choice_game_xml_url = indiv.get_individual_page(multiple_choice_game_url)[0]
-multiple_choice_game_soup = indiv.handle_xml(multiple_choice_game_xml_url)
+multiple_choice_game_soup = indiv.xml_soup(multiple_choice_game_xml_url)
 
 x = "http://learnenglish.britishcouncil.org/en/vocabulary-exercises/appearance-1"
 x_xml_url_1 = indiv.get_individual_page(x)[0]
-x_1_soup = indiv.handle_xml(x_xml_url_1)
+x_1_soup = indiv.xml_soup(x_xml_url_1)
 
 __unique_id = 0
 def unique_id():
