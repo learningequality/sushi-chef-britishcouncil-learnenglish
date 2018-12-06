@@ -22,8 +22,8 @@ headers = {"User-Agent": "Mozilla"}
 
 #response = requests.get(sample_url, headers=headers)
 #soup = BeautifulSoup(response.content, "html5lib")
-import indiv_2
-soup = indiv_2.individual(sample_url)
+#import indiv_2
+#soup = indiv_2.individual(sample_url)
 
 """
 TODO LIST:
@@ -202,11 +202,13 @@ def make_local(soup_data, page_url):
     
     
 
-    return zipfile_name, external_resources
+    return zipfile_name# , external_resources
 
-def nodes(zipfile_name, external_resources):
+def nodes(zipfile_name):# , external_resources):
     z_file = HTMLZipFile(zipfile_name)
     z_node = HTML5AppNode(source_id, title, license)
+    return z_node
+    
 def soup_to_bytes(soup):
     # TODO: download urls, mangle p.printTabHeadline to h2, mangle urls
     prefix = b"""

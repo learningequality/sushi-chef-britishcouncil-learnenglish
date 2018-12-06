@@ -1,3 +1,6 @@
+downloads/
+resources/
+__downloads/
 __pycache__/
 cache.sqlite 
 restore/

@@ -9,16 +9,19 @@ requests_cache.install_cache()
 import lxml.etree
 
 def html_soup(url):
+    "html5lib handles encodings, so throw raw bytes at it with .content"
     html = requests.get(url, headers=request_headers)
-    soup = BeautifulSoup(html.content, "html5lib") # html5lib handles encodings, so throw raw bytes at it with .content
+    soup = BeautifulSoup(html.content, "html5lib")
     return soup
     
 def xml_soup(url):
+    "note: use .text to decode UTF-8 properly rather than just having bytes"
     html = requests.get(url, headers=request_headers)
-    soup = BeautifulSoup(html.text, "xml") # note: use .text to decode UTF-8 properly rather than just having bytes
+    soup = BeautifulSoup(html.text, "xml") 
     return soup
 
 def quiz_links(soup):
+    "return the urls for the quiz XML"
     body = (soup.find("article").find("div", {"class": "field-name-body"}))
     xml_elements = (body.find_all("a", {"class": "embed"}))
     urls = [a.attrs['href'].strip() for a in xml_elements]
@@ -27,10 +30,23 @@ def quiz_links(soup):
 def individual(url = "https://learnenglish.britishcouncil.org/en/youre-hired/episode-03"):
     soup = html_soup(url)
     article = soup.find("article")
-    
-    # delete the comments
-    comments = article.find_all("section", {"id": "comments"})
-    [s.extract() for s in comments]
+
+
+    # remove trash    
+    rubbish = {
+        "comments section": ["section", {"id": "comments"}],
+        "discussion section": ["div", {"class": "group-discussion"}],
+        "login boxes": ["li", {"class": "comment_forbidden"}],
+        "printer friendly": ["li", {"class": "print_html"}],
+        "topics": ["fieldset", {"class": "group-topics"}],
+        }
+        
+    for (rubbish_name, rubbish_description) in rubbish.items():
+        
+        rubbish_tag, rubbish_attr = rubbish_description
+        rubbish_elements = article.find_all(*rubbish_description)
+        print ("removing {} {}".format(len(rubbish_elements), rubbish_name))
+        [s.extract() for s in rubbish_elements]
     
     # unhide hidden styles
     divs = article.find_all("div", {"style": "display: none;"})
@@ -55,10 +71,24 @@ def get_individual_page(url):
     # get all 
     soup = html_soup(url)
     return quiz_links(soup)
+
+def wrap_soup(soup):
+    template = """<!DOCTYPE html>
+    <html lang="en">
+        <head>
+            <meta charset="utf-8">
+            <title>Resource</title>
+        </head>
+        <body>
+    {}
+        </body>
+    </html>"""
+    
+    return template.format(soup.prettify())
         
 def output_html(soup):
     with open("output.html", "w")  as f:
-        f.write(soup.prettify())
-    print (soup.prettify())
+        f.write(wrap_soup(soup))
 
-output_html(individual() )
+if __name__ == "__main__":
+    output_html(individual() )

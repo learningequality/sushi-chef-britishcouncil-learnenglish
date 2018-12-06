@@ -3,16 +3,21 @@ import os
 import sys
 sys.path.append(os.getcwd()) # Handle relative imports
 import logging
+import crawl
+import indiv
+import localise
+import add_file
+
 
 from ricecooker.chefs import SushiChef
 
 
 import quiz
 #import requests
-#from le_utils.constants import licenses
-from ricecooker.classes.nodes import DocumentNode, VideoNode, TopicNode, 
+from le_utils.constants import licenses
+from ricecooker.classes.nodes import DocumentNode, VideoNode, TopicNode, HTML5AppNode
 from ricecooker.classes.files import HTMLZipFile, VideoFile, SubtitleFile, DownloadFile
-#import json 
+#import json q
 #from collections import OrderedDict
 #from index_lessons import crawl_lesson_index
 #from urllib.parse import urljoin
@@ -20,8 +25,8 @@ from ricecooker.classes.files import HTMLZipFile, VideoFile, SubtitleFile, Downl
 #import add_file
 #from bs4 import BeautifulSoup
 #import localise
-#add_file.metadata = {"license": licenses.CC_BY_NC_ND,
-#                     "copyright_holder": "ArtsEdge"}
+add_file.metadata = {"license": licenses.CC_BY_NC_ND,
+                     "copyright_holder": "British Council"}
 
 #raw_lessons = crawl_lesson_index()
 #lessons = OrderedDict([('Elementary', [x for x in raw_lessons if x.grade == "K-4"]),
@@ -44,8 +49,16 @@ class BritishCouncilChef(SushiChef):
     def construct_channel(self, **kwargs):
         channel = self.get_channel(**kwargs)
         #node = quiz.do_it()
-        node = 
-        channel.add_child(node)
+        rss_results = crawl.get_rss_from_url("http://learnenglish.britishcouncil.org/en/writing")
+        for page in rss_results[:3]:  # TODO artificially reduced!
+            # page title, url, description
+            soup = indiv.individual(page['url'])
+            zip_file = localise.make_local(soup, page['url'])
+            node = add_file.create_node(filename=zip_file,
+                                        title = page['title'])            
+            channel.add_child(node)
+            
+        
         return channel
     
 if __name__ == '__main__':

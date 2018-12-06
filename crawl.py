@@ -56,6 +56,12 @@ def get_type(root):
     if is_index and is_detail: raise RuntimeError("Appears to be both index and detail page")
     if not is_index and not is_detail: raise RuntimeError("Appears to be neither index nor detail page")
     
+    
+def get_rss_from_url(url):
+    "returns dictionary of titles, links and descriptions from RSS for a page"
+    html_soup = get_soup(url)
+    return get_rss(soup)
+    
 def get_rss(root):
     # does pagination too!
     # some urls broken -- /en/en/ -> /en/
@@ -110,13 +116,11 @@ def verify_pattern():
         for item in rss:
             print (item['link'])
 
-print ("Success!")
-        
-            
-        
+    print ("Success!")
         
     
-verify_pattern()
+if __name__ == "__main__":
+    verify_pattern()
     
 
  
