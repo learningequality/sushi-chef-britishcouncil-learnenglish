@@ -33,6 +33,9 @@ node_dict = {VideoFile: VideoNode,
 
 def guess_extension(url):
     "Return the extension of a URL, i.e. the bit after the ."
+    if not url:
+        return ""
+    print ("*", repr(url))
     filename = urlsplit(url).path
     if "." not in filename[-8:]: # arbitarily chosen
         return ""

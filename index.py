@@ -36,7 +36,7 @@ def get_writing_page(tax, page):
         root = lxml.html.fromstring(html)
         links = root.xpath(".//tbody//a")
         for link in links:
-            yield link.get("href")
+            yield "http://learnenglish.britishcouncil.org"+link.get("href")
 
         #all_links.extend([x.get("href") for x in links])
         #all_titles.extend([x.text for x in links])
