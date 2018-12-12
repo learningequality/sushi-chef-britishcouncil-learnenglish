@@ -21,32 +21,37 @@ def get_writing_page(tax, page):
     data = dict([[h.partition(': ')[0], h.partition(': ')[2]] for h in datastr.strip().split('\n')])
     head = dict([[h.partition(': ')[0], h.partition(': ')[2]] for h in headers.strip().split('\n')])
 
-    x = requests.post("http://learnenglish.britishcouncil.org/en/views/ajax", data=data, headers=head)
+    print (tax, page, data)
+    while True:
+        try:
+            x = requests.post("http://learnenglish.britishcouncil.org/en/views/ajax", data=data, headers=head, timeout=3)
+            break
+        except Exception as e:
+            print(e)
+            pass
     for i in x.json():
         html = i.get("data")
         if not html:
             continue
         root = lxml.html.fromstring(html)
         links = root.xpath(".//tbody//a")
+        for link in links:
+            yield link.get("href")
 
-        all_links.extend([x.get("href") for x in links])
-        all_titles.extend([x.text for x in links])
-    print (all_titles)
-    return all_links, all_titles
+        #all_links.extend([x.get("href") for x in links])
+        #all_titles.extend([x.text for x in links])
+    #return all_links, all_titles
 
 def get_writing_index(tax):
-    links = []
-    titles = []
     page = 0
     while True:
-        new_links, new_titles = get_writing_page(tax, page)
-        links.extend(new_links)
-        titles.extend(new_titles)
+        new_links = False
+        for link in get_writing_page(tax, page):
+            new_links = True
+            yield link
         if not new_links:
             break
         page = page + 1
-    assert links
-    return links, titles
 
 data = {"writing": 2386,
         "listening": 2345,
@@ -74,4 +79,11 @@ data = {"writing": 2386,
         # moocs, apps out of scope
         }
 
-print (get_writing_index(2767)[0])
+def all_entries():
+    for v in data.values():
+        for link in get_writing_index(v):
+            yield link
+
+if __name__ == "__main__":
+    for i in all_entries():
+        print(i)

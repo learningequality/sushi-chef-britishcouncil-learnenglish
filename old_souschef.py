@@ -3,7 +3,7 @@ import os
 import sys
 sys.path.append(os.getcwd()) # Handle relative imports
 import logging
-import index
+import crawl
 import indiv
 import localise
 import add_file
@@ -49,21 +49,18 @@ class BritishCouncilChef(SushiChef):
     def construct_channel(self, **kwargs):
         channel = self.get_channel(**kwargs)
         #node = quiz.do_it()
-        for i, link in enumerate(index.all_entries()):
-            print("J", link)
-            exit()
-            if i>3: break
-            print (url, title)
+        rss_results = crawl.get_rss_from_url("http://learnenglish.britishcouncil.org/en/writing")
+        for page in rss_results[:3]:  # TODO artificially reduced!
             # page title, url, description
             soup = indiv.individual(page['url'])
             zip_file = localise.make_local(soup, page['url'])
             node = add_file.create_node(filename=zip_file,
-                                        title = page['title'])
+                                        title = page['title'])            
             channel.add_child(node)
-
-
+            
+        
         return channel
-
+    
 if __name__ == '__main__':
     """
     Set the environment var `CONTENT_CURATION_TOKEN` (or `KOLIBRI_STUDIO_TOKEN`)
@@ -73,4 +70,4 @@ if __name__ == '__main__':
     mychef = BritishCouncilChef()
     if 'KOLIBRI_STUDIO_TOKEN' in os.environ:
         os.environ['CONTENT_CURATION_TOKEN'] = os.environ['KOLIBRI_STUDIO_TOKEN']
-    mychef.main()
+    mychef.main()    
