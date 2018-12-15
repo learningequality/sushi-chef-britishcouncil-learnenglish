@@ -3,6 +3,9 @@ import requests_cache
 from urllib.parse import urljoin
 from bs4 import BeautifulSoup
 
+class Metadata(object):
+    pass
+
 request_headers = {"User-Agent": "Mozilla"}
 
 requests_cache.install_cache()
@@ -30,8 +33,14 @@ def quiz_links(soup):
 def individual(url = "https://learnenglish.britishcouncil.org/en/youre-hired/episode-03"):
     soup = html_soup(url)
     article = soup.find("article")
-
-
+    metadata = Metadata()
+    metadata.title = soup.find("h1", {"id": "page-title"}).text
+    metadata.crumb = [x.text for x in soup.find("div", {"class": "breadcrumb"}).find_all("a")]
+    try:
+        metadata.desc = soup.find(None, {"class": "views-field-description"}).text
+    except AttributeError:
+        metadata.desc = None
+    
     # remove trash    
     rubbish = {
         "comments section": ["section", {"id": "comments"}],
@@ -39,6 +48,7 @@ def individual(url = "https://learnenglish.britishcouncil.org/en/youre-hired/epi
         "login boxes": ["li", {"class": "comment_forbidden"}],
         "printer friendly": ["li", {"class": "print_html"}],
         "topics": ["fieldset", {"class": "group-topics"}],
+        "iframes": ["iframe", {}],
         }
         
     for (rubbish_name, rubbish_description) in rubbish.items():
@@ -47,6 +57,10 @@ def individual(url = "https://learnenglish.britishcouncil.org/en/youre-hired/epi
         rubbish_elements = article.find_all(*rubbish_description)
         print ("removing {} {}".format(len(rubbish_elements), rubbish_name))
         [s.extract() for s in rubbish_elements]
+    
+    # remove pointless hyperlinks to "#"
+    hashlinks = article.find_all("a", {"href": "#"})
+    [link.replaceWithChildren() for link in hashlinks]
     
     # unhide hidden styles
     divs = article.find_all("div", {"style": "display: none;"})
@@ -64,7 +78,7 @@ def individual(url = "https://learnenglish.britishcouncil.org/en/youre-hired/epi
         video = BeautifulSoup('<video controls><source src="http://www.viddler.com/file/{}/html5" type="video/mp4"></video>'.format(viddler_id), "html5lib")
         vid.replaceWith(video)
     
-    return article
+    return article, metadata
 
 def get_individual_page(url):
     # from old version: used by quiz
@@ -91,4 +105,4 @@ def output_html(soup):
         f.write(wrap_soup(soup))
 
 if __name__ == "__main__":
-    output_html(individual() )
+    output_html(individual("https://learnenglish.britishcouncil.org/en/intermediate-grammar"))

@@ -17,7 +17,6 @@ from ricecooker.classes.files import HTMLZipFile, VideoFile, SubtitleFile, Downl
 DOMAIN = "learnenglish.britishcouncil.org"
 LINK_ATTRIBUTES = ["src", "href"]
 DOWNLOAD_FOLDER = "downloads"
-sample_url = "https://learnenglish.britishcouncil.org/en/youre-hired/episode-03"
 headers = {"User-Agent": "Mozilla"}
 
 #response = requests.get(sample_url, headers=headers)
@@ -74,7 +73,7 @@ def get_resources(soup):
     return resources
 
 
-def make_local(soup_data, page_url):
+def make_local(soup_data, page_url, delete=True):
     def full_url(url):
         if urlparse(url).scheme == "":
             url = urljoin("https://", url)
@@ -91,18 +90,18 @@ def make_local(soup_data, page_url):
         shutil.rmtree(DOWNLOAD_FOLDER)
     except:
         pass
-    
+
     soup = BeautifulSoup("", "html5lib")  # reify html chunk to a soup.
     soup.append(soup_data)
-    
+
     make_links_absolute(soup, page_url)
     resources = get_resources(soup)
-    
+
     # delete quizzes
     xml_elements = soup.find_all("a", {"class": "embed"})
     for xml in xml_elements:
         xml.extract()
-    
+
     try:
         os.mkdir(DOWNLOAD_FOLDER)
     except FileExistsError:
@@ -136,7 +135,7 @@ def make_local(soup_data, page_url):
                     try:
                         resource.replaceWith(new_tag)  # TODO -- this might mess up the iteration?
                     except ValueError:  # if the resource isn't part of the tree, it errors.
-                        pass 
+                        pass
                     continue
 
                 else:
@@ -152,13 +151,13 @@ def make_local(soup_data, page_url):
                             content_type = ""
                         extension = ext_from_mime_type(content_type)
                         filename = hashed_url(attribute_value)+extension
-                        
-                        if extension in [".mp4", ".pdf"]:
-                            external_resource = {'url': resource.attrs.get(attribute), 
-                                                 'text': resource.text,
-                                                 'filename': filename}
-                            external_resources.append(external_resource)
-                        
+
+                        #if extension in [".mp4", ".pdf"]:  # TODO - handle video/pdf/mp3
+                        #    external_resource = {'url': resource.attrs.get(attribute),
+                        #                         'text': resource.text,
+                        #                         'filename': filename}
+                        #    external_resources.append(external_resource)
+
                         with open(DOWNLOAD_FOLDER+"/"+filename, "wb") as f:
                             try:
                                 f.write(content)
@@ -171,11 +170,11 @@ def make_local(soup_data, page_url):
                     continue
 
 
-    html = soup_to_bytes(soup)  
+    html = soup_to_bytes(soup)
 
     with codecs.open(DOWNLOAD_FOLDER+"/index.html", "wb") as f:
         f.write(html)
-        
+
     # add modified CSS file
     #os.mkdir(DOWNLOAD_FOLDER+"/resources")
     #shutil.copy("main.css", DOWNLOAD_FOLDER+"/resources")
@@ -190,17 +189,18 @@ def make_local(soup_data, page_url):
         os.mkdir("resources")
     except Exception:
         pass
-    
+
     for f in external_resources:
         f['path'] = "resources/" + f['filename']
         shutil.copy("__"+DOWNLOAD_FOLDER+"/"+f['filename'], f['path'])
 
     # delete contents of downloadfolder
     assert "downloads" in DOWNLOAD_FOLDER
-    shutil.rmtree(DOWNLOAD_FOLDER)
+    if delete:
+        shutil.rmtree(DOWNLOAD_FOLDER)
     print(os.path.getsize(zipfile_name))
-    
-    
+
+
 
     return zipfile_name# , external_resources
 
@@ -208,7 +208,7 @@ def nodes(zipfile_name):# , external_resources):
     z_file = HTMLZipFile(zipfile_name)
     z_node = HTML5AppNode(source_id, title, license)
     return z_node
-    
+
 def soup_to_bytes(soup):
     # TODO: download urls, mangle p.printTabHeadline to h2, mangle urls
     prefix = b"""
@@ -231,12 +231,15 @@ def soup_to_bytes(soup):
 
 
     output = []
-    #output.append(prefix)
+    output.append(prefix)
     article = soup.find("article")
     output.append(article.prettify().encode('utf-8'))
-    #output.append(suffix)
+    output.append(suffix)
     return b"\n\n<!-- dragon -->\n\n".join(output)
 
 
 if __name__ == "__main__":
-    print (make_local(soup, sample_url))
+    import indiv
+    sample_url = "https://learnenglish.britishcouncil.org/en/youre-hired/episode-03"
+    soup = indiv.individual(sample_url)
+    print (make_local(soup, sample_url, delete=False))

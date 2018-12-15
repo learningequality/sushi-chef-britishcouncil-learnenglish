@@ -73,7 +73,7 @@ def download_file(url):
         print ("Already exists in cache")
     return filename, zip_response.headers.get("content-type")
 
-def create_node(file_class=None, url=None, filename=None, title=None, license=None, copyright_holder=None):
+def create_node(file_class=None, url=None, filename=None, title=None, license=None, copyright_holder=None, description=""):
     # note: things will break downstream if license etc. not provided!
     # use 'metadata' to automatically fill in fields
     
@@ -121,6 +121,7 @@ def create_node(file_class=None, url=None, filename=None, title=None, license=No
                       license=license or metadata['license'], 
                       copyright_holder=copyright_holder or metadata['copyright_holder'],
                       files=[file_instance],
+                      description="",
                       )     
 
 def guess_type(content_type="",
