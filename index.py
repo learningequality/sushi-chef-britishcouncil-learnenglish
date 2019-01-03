@@ -21,14 +21,13 @@ def get_writing_page(tax, page):
     data = dict([[h.partition(': ')[0], h.partition(': ')[2]] for h in datastr.strip().split('\n')])
     head = dict([[h.partition(': ')[0], h.partition(': ')[2]] for h in headers.strip().split('\n')])
 
-    print (tax, page, data)
+    # print (tax, page, data)
     while True:
         try:
-            x = requests.post("http://learnenglish.britishcouncil.org/en/views/ajax", data=data, headers=head, timeout=3)
+            x = requests.post("https://learnenglish.britishcouncil.org/views/ajax", data=data, headers=head, timeout=3)
             break
         except Exception as e:
-            print(e)
-            pass
+            raise # was pass
     for i in x.json():
         html = i.get("data")
         if not html:

@@ -33,6 +33,11 @@ def quiz_links(soup):
 def individual(url = "https://learnenglish.britishcouncil.org/en/youre-hired/episode-03"):
     soup = html_soup(url)
     article = soup.find("article")
+    if not article:
+        with open("log.log", "a") as f:
+            _id = soup.find("link", {"rel": "shortlink"})
+            f.write("no article: {} {}".format(url, _id.get("href")))
+        return soup, None
     metadata = Metadata()
     metadata.title = soup.find("h1", {"id": "page-title"}).text
     metadata.crumb = [x.text for x in soup.find("div", {"class": "breadcrumb"}).find_all("a")]
@@ -54,9 +59,12 @@ def individual(url = "https://learnenglish.britishcouncil.org/en/youre-hired/epi
     for (rubbish_name, rubbish_description) in rubbish.items():
         
         rubbish_tag, rubbish_attr = rubbish_description
-        rubbish_elements = article.find_all(*rubbish_description)
-        print ("removing {} {}".format(len(rubbish_elements), rubbish_name))
-        [s.extract() for s in rubbish_elements]
+        try:
+            rubbish_elements = article.find_all(*rubbish_description)
+            print ("removing {} {}".format(len(rubbish_elements), rubbish_name))
+            [s.extract() for s in rubbish_elements]
+        except Exception:
+            pass
     
     # remove pointless hyperlinks to "#"
     hashlinks = article.find_all("a", {"href": "#"})
