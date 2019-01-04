@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import re
 import os
 import sys
 sys.path.append(os.getcwd()) # Handle relative imports
@@ -12,11 +13,11 @@ import hashlib
 from ricecooker.chefs import SushiChef
 
 #import quiz
-from le_utils.constants import licenses
+from ricecooker.classes.licenses import SpecialPermissionsLicense
 from ricecooker.classes.nodes import DocumentNode, VideoNode, TopicNode, HTML5AppNode
 from ricecooker.classes.files import HTMLZipFile, VideoFile, SubtitleFile, DownloadFile
 import ricecooker.classes.nodes
-add_file.metadata = {"license": licenses.CC_BY_NC_ND,
+add_file.metadata = {"license": SpecialPermissionsLicense("British Council", "Special permission for distribution via Kolibri platform"),
                      "copyright_holder": "British Council"}
 
 LOGGER = logging.getLogger()
@@ -54,6 +55,8 @@ class BritishCouncilChef(SushiChef):
 
         def build_structure(topic_tree):
             topic_tree = tuple(topic_tree)
+            assert topic_tree[0] == "Home"
+            topic_tree = topic_tree[1:]  # remove Home
             for i in range(1,len(topic_tree)+1):
                 partial_tree = topic_tree[:i]
                 parent = partial_tree[:-1] or None
@@ -72,7 +75,8 @@ class BritishCouncilChef(SushiChef):
 
         #node = quiz.do_it()
         idlookup = {}
-        for i, link in enumerate(index.all_entries()):
+        # for i, link in enumerate(index.all_entries()):
+        for i, link in enumerate(sample_data):
             if i>3: break # quit early -- TODO
             try:
                 soup, metadata = indiv.individual(link)
@@ -89,6 +93,18 @@ class BritishCouncilChef(SushiChef):
                 print ("***SKIP***", idlookup[zip_file])
             else:
                 idlookup[zip_file] = link
+
+                ## SPECIAL HANDLING FOR PODCAST SERIES -- NESTED LEVELS
+                match = re.search("(Series \d\d) (Episode \d\d)", metadata.title)
+                if match:
+                    metadata.crumb.append(match.group(1))
+                    cat_node = build_structure(metadata.crumb)
+                    metadata.title = match.group(2)
+
+                ## SPECIAL HANDLING FOR WORD ON THE STREET -- DROP DIRECT LEAVES
+                if metadata.crumb[-1] == "Word on the Street":
+                    continue
+              
                 node = add_file.create_node(filename=zip_file,
                                             file_class=HTMLZipFile,
                                             title = metadata.title,

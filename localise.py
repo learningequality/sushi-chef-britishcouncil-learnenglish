@@ -1,3 +1,4 @@
+import re
 import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin, urlparse
@@ -102,6 +103,11 @@ def make_local(soup_data, page_url, delete=True):
     for xml in xml_elements:
         xml.extract()
 
+    # delete Task X messages
+    for elem in soup(text=re.compile(r'(?:Task|Activity|Mitigators) \d+')):  # TODO - consider finding all single-word + number
+        print (elem)
+        elem.extract()
+
     try:
         os.mkdir(DOWNLOAD_FOLDER)
     except FileExistsError:
@@ -176,8 +182,8 @@ def make_local(soup_data, page_url, delete=True):
         f.write(html)
 
     # add modified CSS file
-    #os.mkdir(DOWNLOAD_FOLDER+"/resources")
-    #shutil.copy("main.css", DOWNLOAD_FOLDER+"/resources")
+    os.mkdir(DOWNLOAD_FOLDER+"/resources")
+    shutil.copy("styles.css", DOWNLOAD_FOLDER+"/resources")
 
     # create zip file
     zipfile_name = shutil.make_archive("__"+DOWNLOAD_FOLDER+"/"+hashed_url(page_url), "zip", # automatically adds .zip extension!
@@ -214,7 +220,7 @@ def soup_to_bytes(soup):
     prefix = b"""
     <html>
     <head>
-      <link rel="stylesheet" type="text/css" href="resources/main.css">
+      <link rel="stylesheet" type="text/css" href="resources/styles.css">
       <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     </head>
     <body>

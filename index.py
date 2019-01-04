@@ -59,8 +59,8 @@ data = {"writing": 2386,
         "basic-grammar": 2769,
         "intermediate-grammar": 2770,
         # "english-grammar": 2403, # NOPE -- NOT THIS WAY TODO
-        "basic-vocabulary": 2767,
-        "intermediate-vocabulary": 2768,
+        # "basic-vocabulary": 2767, # just quizzes
+        # "intermediate-vocabulary": 2768, # just quizzes
         "youre-hired": 2389,
         "professionals-podcast": 2390,
         "business-magazine": 2391,
