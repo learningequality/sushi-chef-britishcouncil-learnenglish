@@ -84,5 +84,7 @@ def all_entries():
             yield link
 
 if __name__ == "__main__":
-    for i in all_entries():
-        print(i)
+    #for i in all_entries():
+    #    print(i)
+
+    print (list(get_writing_index(2728)))

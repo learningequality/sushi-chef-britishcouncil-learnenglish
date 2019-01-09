@@ -6,3 +6,7 @@ __downloads/
 __pycache__/
 cache.sqlite 
 restore/
+*.pyc
+*.log
+*.css
+*.html

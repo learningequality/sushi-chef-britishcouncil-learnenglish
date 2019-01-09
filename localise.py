@@ -107,6 +107,10 @@ def make_local(soup_data, page_url, delete=True):
     for elem in soup(text=re.compile(r'(?:Task|Activity|Mitigators) \d+')):  # TODO - consider finding all single-word + number
         print (elem)
         elem.extract()
+    
+    for elem in soup(text=re.compile(r'Game')):  # TODO - consider finding all single-word + number
+        print (elem)
+        elem.extract()
 
     try:
         os.mkdir(DOWNLOAD_FOLDER)

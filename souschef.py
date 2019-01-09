@@ -9,7 +9,8 @@ import indiv
 import localise
 import add_file
 import hashlib
-
+import enggrammar
+import kidsindex
 from ricecooker.chefs import SushiChef
 
 #import quiz
@@ -62,6 +63,7 @@ class BritishCouncilChef(SushiChef):
                 parent = partial_tree[:-1] or None
                 leaf = partial_tree[-1]
                 if partial_tree not in cats:
+                    print ("Partial tree not in cats")
                     cats[partial_tree] = TopicNode(source_id=sha1(repr(partial_tree)),
                                                    title=leaf,
                                                    description="")
@@ -75,8 +77,25 @@ class BritishCouncilChef(SushiChef):
 
         #node = quiz.do_it()
         idlookup = {}
+        
+        for title, zip_file in enggrammar.index():
+            break # TODO
+            cat_node = build_structure(["Home", "Grammar", "English Grammar"])
+            node = add_file.create_node(filename=zip_file,
+                                        file_class=HTMLZipFile,
+                                        title = title.text,
+                                        description = ""
+                                        )
+            cat_node.add_child(node)
+
+        ## normal
         # for i, link in enumerate(index.all_entries()):
-        for i, link in enumerate(sample_data):
+
+        ## sample
+        # for i, link in enumerate(sample_data):
+
+        ## kids
+        for i, link in enumerate(kidsindex.all_entries()):
             if i>3: break # quit early -- TODO
             try:
                 soup, metadata = indiv.individual(link)
@@ -112,7 +131,11 @@ class BritishCouncilChef(SushiChef):
                                             )
                 cat_node.add_child(node)
 
+        def show_node(node):
+            for child in node.children:
+                print (repr(child))
 
+        show_node(channel)
         return channel
 
 if __name__ == '__main__':
