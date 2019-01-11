@@ -11,6 +11,7 @@ import add_file
 import hashlib
 import enggrammar
 import kidsindex
+import teenindex
 from ricecooker.chefs import SushiChef
 
 #import quiz
@@ -93,6 +94,9 @@ class BritishCouncilChef(SushiChef):
 
         ## sample
         # for i, link in enumerate(sample_data):
+
+        ## teens
+        # for i, link in enumerate(teenindex.all_entries()):
 
         ## kids
         for i, link in enumerate(kidsindex.all_entries()):
