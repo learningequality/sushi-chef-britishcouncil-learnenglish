@@ -23,7 +23,7 @@ add_file.metadata = {"license": SpecialPermissionsLicense("British Council", "Sp
                      "copyright_holder": "British Council"}
 
 LOGGER = logging.getLogger()
-
+DEBUG = True
 def _add_child(self, node):
         """ add_child: Adds child node to node
             Args: node to add as child
@@ -56,9 +56,13 @@ class BritishCouncilChef(SushiChef):
         channel = self.get_channel(**kwargs)
 
         def build_structure(topic_tree):
+            #assert topic_tree[0] == "Home"
+            #topic_tree = topic_tree[1:]  # remove Home
+            try:
+                topic_tree.remove("Home")
+            except:
+                pass
             topic_tree = tuple(topic_tree)
-            assert topic_tree[0] == "Home"
-            topic_tree = topic_tree[1:]  # remove Home
             for i in range(1,len(topic_tree)+1):
                 partial_tree = topic_tree[:i]
                 parent = partial_tree[:-1] or None
@@ -76,64 +80,80 @@ class BritishCouncilChef(SushiChef):
                         print("ADD TO CHANNEL")
             return cats[topic_tree]
 
+
+        def handle_index(index, top):
+            idlookup = {}
+            for i, link in enumerate(index):
+                if DEBUG and i>3: break # quit early 
+                try:
+                    soup, metadata = indiv.individual(link)
+                    
+                except:
+                    print ("link: ", link)
+                    raise
+                
+                if metadata is None:
+                    continue
+                ## SPECIAL HANDLING FOR GAMES - DROP
+                if "Games" in metadata.crumb:
+                    continue
+                  
+                crumb = [top]
+                crumb.extend(metadata.crumb)
+                cat_node = build_structure(crumb)
+                zip_file = localise.make_local(soup, link)
+                print (zip_file)
+                if zip_file in idlookup:
+                    print ("***SKIP***", idlookup[zip_file])
+                else:
+                    idlookup[zip_file] = link
+
+                    ## SPECIAL HANDLING FOR PODCAST SERIES -- NESTED LEVELS
+                    match = re.search("(Series \d\d) (Episode \d\d)", metadata.title)
+                    if match:
+                        crumb.append(match.group(1))
+                        cat_node = build_structure(crumb)
+                        metadata.title = match.group(2)
+
+                    ## SPECIAL HANDLING FOR WORD ON THE STREET -- DROP DIRECT LEAVES
+                    if metadata.crumb[-1] == "Word on the Street":
+                        continue
+
+                    node = add_file.create_node(filename=zip_file,
+                                                file_class=HTMLZipFile,
+                                                title = metadata.title,
+                                                description = metadata.desc
+                                                )
+                    cat_node.add_child(node)
+
+        if not DEBUG: 
+            handle_index(index.all_entries(), "Adults")
+            handle_index(teenindex.all_entries(), "Teens")
+        handle_index(kidsindex.all_entries(), "Kids")
+
         #node = quiz.do_it()
-        idlookup = {}
         
         for title, zip_file in enggrammar.index():
-            break # TODO
-            cat_node = build_structure(["Home", "Grammar", "English Grammar"])
+            if DEBUG:
+                break
+            cat_node = build_structure(["Home", "Adults", "Grammar", "English Grammar"])
             node = add_file.create_node(filename=zip_file,
                                         file_class=HTMLZipFile,
                                         title = title.text,
                                         description = ""
                                         )
             cat_node.add_child(node)
-
-        ## normal
-        # for i, link in enumerate(index.all_entries()):
-
-        ## sample
-        # for i, link in enumerate(sample_data):
-
-        ## teens
-        # for i, link in enumerate(teenindex.all_entries()):
-
-        ## kids
-        for i, link in enumerate(kidsindex.all_entries()):
-            if i>3: break # quit early -- TODO
-            try:
-                soup, metadata = indiv.individual(link)
-                
-            except:
-                print ("link: ", link)
-                raise
-            if metadata is None:
-                continue
-            cat_node = build_structure(metadata.crumb)
-            zip_file = localise.make_local(soup, link)
-            print (zip_file)
-            if zip_file in idlookup:
-                print ("***SKIP***", idlookup[zip_file])
-            else:
-                idlookup[zip_file] = link
-
-                ## SPECIAL HANDLING FOR PODCAST SERIES -- NESTED LEVELS
-                match = re.search("(Series \d\d) (Episode \d\d)", metadata.title)
-                if match:
-                    metadata.crumb.append(match.group(1))
-                    cat_node = build_structure(metadata.crumb)
-                    metadata.title = match.group(2)
-
-                ## SPECIAL HANDLING FOR WORD ON THE STREET -- DROP DIRECT LEAVES
-                if metadata.crumb[-1] == "Word on the Street":
-                    continue
-              
-                node = add_file.create_node(filename=zip_file,
-                                            file_class=HTMLZipFile,
-                                            title = metadata.title,
-                                            description = metadata.desc
-                                            )
-                cat_node.add_child(node)
+        
+        for title, zip_file in enggrammar.index():
+            if DEBUG:
+                break
+            cat_node = build_structure(["Home", "Teens", "Grammar", "English Grammar"])
+            node = add_file.create_node(filename=zip_file,
+                                        file_class=HTMLZipFile,
+                                        title = title.text,
+                                        description = ""
+                                        )
+            cat_node.add_child(node)
 
         def show_node(node):
             for child in node.children:

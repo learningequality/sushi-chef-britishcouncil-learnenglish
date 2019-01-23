@@ -1,6 +1,7 @@
 import lxml.html
 import requests
 from urllib.parse import urljoin
+from ordered_set import OrderedSet
 
 # TODO - parents/resources is potentially valuable.
 
@@ -50,6 +51,7 @@ def get_writing_page(tax, page):
         except Exception as e:
             raise # was pass
     for i in x.json():
+        print(i)
         html = i.get("data")
         if not html:
             continue
@@ -61,7 +63,7 @@ def get_writing_page(tax, page):
 def get_writing_index(tax):
     # Get all results for a given taxonomy
     page = 0
-    results = set()
+    results = OrderedSet()
     while True:
         new_links = False
         for link in get_writing_page(tax, page):

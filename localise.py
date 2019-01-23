@@ -1,6 +1,8 @@
+from ordered_set import OrderedSet
 import re
 import requests
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, Tag
+
 from urllib.parse import urljoin, urlparse
 import hashlib
 import os
@@ -9,17 +11,19 @@ import codecs
 import shutil
 from mime import mime
 import urllib3
+import youtube
+
 urllib3.disable_warnings()
 requests_cache.install_cache()
 
 from ricecooker.classes.nodes import DocumentNode, VideoNode, TopicNode, HTML5AppNode
 from ricecooker.classes.files import HTMLZipFile, VideoFile, SubtitleFile, DownloadFile
 
-DOMAIN = "learnenglish.britishcouncil.org"
+DOMAINS = ["learnenglish.britishcouncil.org", "learnenglishteens.britishcouncil.org", "learnenglishkids.britishcouncil.org", ""]
 LINK_ATTRIBUTES = ["src", "href"]
 DOWNLOAD_FOLDER = "downloads"
 headers = {"User-Agent": "Mozilla"}
-
+                    
 #response = requests.get(sample_url, headers=headers)
 #soup = BeautifulSoup(response.content, "html5lib")
 #import indiv_2
@@ -67,7 +71,7 @@ def get_resources(soup):
             return False
         return True
 
-    resources = set()
+    resources = OrderedSet()
     for attribute in LINK_ATTRIBUTES:
         l = soup.find_all(lambda tag: is_valid_tag(tag))
         resources.update(l)
@@ -75,6 +79,7 @@ def get_resources(soup):
 
 
 def make_local(soup_data, page_url, delete=True):
+
     def full_url(url):
         if urlparse(url).scheme == "":
             url = urljoin("https://", url)
@@ -98,10 +103,13 @@ def make_local(soup_data, page_url, delete=True):
     make_links_absolute(soup, page_url)
     resources = get_resources(soup)
 
-    # delete quizzes
-    xml_elements = soup.find_all("a", {"class": "embed"})
-    for xml in xml_elements:
-        xml.extract()
+
+    # delete ratings
+    for elem in soup.find_all(lambda tag: tag.has_attr("id") and 'rate-node' in tag.attrs['id']):
+        elem.extract()
+
+    for elem in soup.find_all("div", {"class": "field-name-comment-count"}):
+        elem.extract()
 
     # delete Task X messages
     for elem in soup(text=re.compile(r'(?:Task|Activity|Mitigators) \d+')):  # TODO - consider finding all single-word + number
@@ -111,6 +119,37 @@ def make_local(soup_data, page_url, delete=True):
     for elem in soup(text=re.compile(r'Game')):  # TODO - consider finding all single-word + number
         print (elem)
         elem.extract()
+
+    # complicated -- delete 
+    for fieldset in soup.find_all("fieldset"):
+        xml_elements = fieldset.find_all("a", {"class": "embed"})
+        iframes = fieldset.find_all("iframe")
+        video = fieldset.find_all("video")
+        if not xml_elements and not iframes and not video:
+            continue
+        [x.extract() for x in xml_elements]
+       
+        #[x.extract() for x in iframes]
+        
+        legend = fieldset.find("legend")
+        if len ("".join(fieldset.strings)) - len("".join(legend.strings))> 60:
+            continue
+        if fieldset.find("img") or fieldset.find("a"):
+            continue
+        fieldset.extract()
+
+    for collapsible in soup.find_all("div", {"class": "collapsible"}):
+        strings = "".join(collapsible.strings).strip()
+        if len (strings) < 40:
+            collapsible.extract()
+
+    # delete quizzes
+    xml_elements = soup.find_all("a", {"class": "embed"})
+    for xml in xml_elements:
+        # insert quiz placeholder
+        xml.extract()
+
+    #[x.extract() for x in soup.find_all('iframe')] 
 
     try:
         os.mkdir(DOWNLOAD_FOLDER)
@@ -134,7 +173,16 @@ def make_local(soup_data, page_url, delete=True):
             if attribute_value and attribute_value in url_list:
                 if attribute_value.startswith("mailto"):
                     continue
-                if resource.name == "a" and urlparse(attribute_value).netloc not in (DOMAIN, "", "www.kennedy-center.org"):
+
+                if "youtube.com/" in attribute_value or "youtu.be/" in attribute_value:
+                    print ("Downloading video from youtube : {}".format(attribute_value))
+                    filename = youtube.download(attribute_value)
+                    if filename:
+                        resource_filenames[attribute_value] = filename.partition("/")[2]
+                    else:
+                        filename = ""
+
+                if resource.name == "a" and urlparse(attribute_value).netloc not in DOMAINS:
                     #print (urlparse(attribute_value).netloc)
                     # print ("rewriting non-local URL {} in {}".format(attribute_value, resource.name))
                     new_tag = soup.new_tag("span")
@@ -168,11 +216,12 @@ def make_local(soup_data, page_url, delete=True):
                         #                         'filename': filename}
                         #    external_resources.append(external_resource)
 
-                        with open(DOWNLOAD_FOLDER+"/"+filename, "wb") as f:
-                            try:
-                                f.write(content)
-                            except requests.exceptions.InvalidURL:
-                                pass
+                        if "index" not in filename and not filename.endswith(".htm"):
+                            with open(DOWNLOAD_FOLDER+"/"+filename, "wb") as f:
+                                try:
+                                    f.write(content)
+                                except requests.exceptions.InvalidURL:
+                                    pass
 
                         resource_filenames[attribute_value] = filename
 
@@ -250,6 +299,8 @@ def soup_to_bytes(soup):
 
 if __name__ == "__main__":
     import indiv
-    sample_url = "https://learnenglish.britishcouncil.org/en/youre-hired/episode-03"
-    soup = indiv.individual(sample_url)
+    #sample_url = "https://learnenglish.britishcouncil.org/en/youre-hired/episode-03"
+    sample_url = "http://learnenglishteens.britishcouncil.org/study-break/youtubers/weird-things-we-do-britain"
+    #sample_url = "http://learnenglishteens.britishcouncil.org/uk-now/read-uk/world-cup-2018"
+    soup, metadata = indiv.individual(sample_url)
     print (make_local(soup, sample_url, delete=False))

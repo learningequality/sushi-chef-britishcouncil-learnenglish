@@ -31,8 +31,15 @@ def quiz_links(soup):
     return urls
 
 def individual(url = "https://learnenglish.britishcouncil.org/en/youre-hired/episode-03"):
+    teens = "learnenglishteens" in url
     soup = html_soup(url)
-    article = soup.find("article")
+    if not teens:
+        article = soup.find("article")
+    else:
+        article = soup.find("div", {"class": "node-article"})
+        if not article:
+            article = soup.find("div", {"class": "node-blog"})
+        article.name = "article"
     if not article:
         with open("log.log", "a") as f:
             _id = soup.find("link", {"rel": "shortlink"})
@@ -53,7 +60,7 @@ def individual(url = "https://learnenglish.britishcouncil.org/en/youre-hired/epi
         "login boxes": ["li", {"class": "comment_forbidden"}],
         "printer friendly": ["li", {"class": "print_html"}],
         "topics": ["fieldset", {"class": "group-topics"}],
-        "iframes": ["iframe", {}],
+        #"iframes": ["iframe", {}],
         }
         
     for (rubbish_name, rubbish_description) in rubbish.items():
@@ -83,9 +90,21 @@ def individual(url = "https://learnenglish.britishcouncil.org/en/youre-hired/epi
     
     for vid in viddlers:
         viddler_id = vid.attrs['data-video-id'] 
-        video = BeautifulSoup('<video controls><source src="http://www.viddler.com/file/{}/html5" type="video/mp4"></video>'.format(viddler_id), "html5lib")
+        video = BeautifulSoup('<video controls><source src="http://www.viddler.com/file/{}/html5" type="video/mp4"></video>'.format(viddler_id), "html5lib").find("video")
         vid.replaceWith(video)
-    
+   
+    iframes = article.find_all("iframe")
+    print ("IFRAME?")
+    for iframe in iframes:
+        print (iframe)
+        print (iframe.attrs)
+        if "src" in iframe.attrs and "youtube" in iframe.attrs['src']:
+            print ("IFRAME!")
+            video = BeautifulSoup('<video controls><source src="{}" type="video/mp4"></video>'.format(iframe.attrs['src']), "html5lib")
+            iframe.replaceWith(video)
+        else:
+            print ("IFRAME :(")
+            iframe.extract()
     return article, metadata
 
 def get_individual_page(url):
