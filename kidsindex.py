@@ -18,8 +18,7 @@ User-Agent: Learning-Equality
 """
 
 base_url = "http://learnenglishkids.britishcouncil.org/en/"
-ajax_url = "http://learnenglishkids.britishcouncil.org/en/views/ajax"
-
+ajax_url = "http://learnenglishkids.britishcouncil.org/views/ajax"
 
 def acquire_shortlink(url):
     # get the shortlink code from a URL
@@ -51,7 +50,6 @@ def get_writing_page(tax, page):
         except Exception as e:
             raise # was pass
     for i in x.json():
-        print(i)
         html = i.get("data")
         if not html:
             continue

@@ -1,26 +1,27 @@
 import requests
 import lxml.html
 import requests_cache
+from ordered_set import OrderedSet
 requests_cache.install_cache()
 base_url = "http://learnenglishteens.britishcouncil.org/"
 headers = {"User-Agent": "Learning-Equality"}
 
 def get_magazine(template_url = "http://learnenglishteens.britishcouncil.org/magazine?page={}", contains="magazine"):
     page = 0
-    links = set()
+    links = OrderedSet()
     while True:
         print (page)
         url = template_url.format(page)
         content = requests.get(url, headers=headers).content
         root = lxml.html.fromstring(content)
-        new_links = root.xpath(f"//div[@id='content']//div[@class='view-content']//span[@class='field-content']/a[contains(@href, '{contains}')]/@href")
+        new_links = root.xpath("//div[@id='content']//div[@class='view-content']//span[@class='field-content']/a[contains(@href, '{contains}')]/@href".format(contains=contains))
         if not new_links:
             break
         links.update(new_links)
         if 'singleton' in url:
             break
         page = page + 1
-    return links
+    return ["http://learnenglishteens.britishcouncil.org"+url for url in links]
 
 #print(get_magazine(template_url = "http://learnenglishteens.britishcouncil.org/study-break/video-zone?page={}", contains=""))
 
