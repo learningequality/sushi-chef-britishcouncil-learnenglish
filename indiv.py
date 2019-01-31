@@ -92,6 +92,15 @@ def individual(url = "https://learnenglish.britishcouncil.org/en/youre-hired/epi
         viddler_id = vid.attrs['data-video-id'] 
         video = BeautifulSoup('<video controls><source src="http://www.viddler.com/file/{}/html5" type="video/mp4"></video>'.format(viddler_id), "html5lib").find("video")
         vid.replaceWith(video)
+
+    more_viddlers = article.find_all("embed")
+    for vid in more_viddlers:
+        if "src" not in vid.attrs or "viddler.com" not in vid.attrs['src']: continue
+        import re
+        viddler_id = re.search("/([0123456789abcdefABCDEF]+)/", vid.attrs['src']).groups(1)[0]
+        video = BeautifulSoup('<video controls><source src="http://www.viddler.com/file/{}/html5" type="video/mp4"></video>'.format(viddler_id), "html5lib").find("video")
+        vid.replaceWith(video)
+       
    
     iframes = article.find_all("iframe")
     print ("IFRAME?")

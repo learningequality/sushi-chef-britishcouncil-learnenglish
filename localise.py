@@ -301,6 +301,7 @@ if __name__ == "__main__":
     import indiv
     #sample_url = "https://learnenglish.britishcouncil.org/en/youre-hired/episode-03"
     sample_url = "http://learnenglishteens.britishcouncil.org/study-break/youtubers/weird-things-we-do-britain"
+    sample_url = "https://learnenglishkids.britishcouncil.org/video-tips/organising"
     #sample_url = "http://learnenglishteens.britishcouncil.org/uk-now/read-uk/world-cup-2018"
     soup, metadata = indiv.individual(sample_url)
     print (make_local(soup, sample_url, delete=False))
