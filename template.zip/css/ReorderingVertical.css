@@ -1,0 +1,25 @@
+/* style for game type ReorderingVertical */
+
+.type-ReorderingVertical .list-group-item {
+  margin-bottom: 3px;
+}
+.type-ReorderingVertical .gapfield-list .ui-sortable-placeholder {
+  min-height: 36px;
+}
+
+.type-ReorderingVertical ul.gapfield-list-locked > li {
+  opacity: 1;
+  color: #333;
+}
+.type-ReorderingVertical .glyphicon-lock {
+  __display: none;
+}
+
+.type-ReorderingVertical .ui-sortable .btn {
+  /*display: inline-block;*/ /* fix ie */
+}
+
+.type-ReorderingVertical .gapfield-list,
+.type-ReorderingVertical .gapfield-list-locked {
+	margin-top: 4px;
+}

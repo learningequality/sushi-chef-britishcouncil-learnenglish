@@ -1,0 +1,56 @@
+/* style for game type ReorderingHorizontal */
+
+.type-ReorderingHorizontal .question > .panel-default {
+  border: none;
+  background-color: #ebeff0;
+  border-radius: 0;
+  padding: 15px 20px 10px;
+  min-height: 66px;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+.panel > :last-child.list-group :last-child.list-group-item{
+  display:inline-block;
+  margin:0;
+  padding-top:10px;
+  min-height:40px;
+}
+.type-ReorderingHorizontal .question > .panel-default .panel-body {
+  padding: 0;
+}
+.type-ReorderingHorizontal .question .block .mini-audio {
+  top: -8px;
+  position: relative;
+}
+.type-ReorderingHorizontal .question .block .panel {
+  margin-right: 5px;
+}
+.type-ReorderingHorizontal ul.gapfield-list-locked > li {
+  opacity: 1;
+  color: #333;
+}
+/*
+.type-ReorderingHorizontal .glyphicon-lock {
+  display: none;
+}
+*/
+
+.type-ReorderingHorizontal .list-group .list-group-item { width: 100%; }
+
+.type-ReorderingHorizontal .ui-sortable .btn {
+  display: inline-block; /* fix ie */
+}
+
+.type-ReorderingHorizontal .gapfield-list .btn {
+  display: block;
+}
+
+@media screen and (max-width: 768px) {
+  .type-ReorderingHorizontal .question .block .mini-audio {
+    display: inline-block;
+  }
+
+  .type-ReorderingHorizontal .question .block .mini-audio .glyphicon {
+    top: 0;
+  }
+}

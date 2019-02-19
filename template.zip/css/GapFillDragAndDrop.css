@@ -1,0 +1,26 @@
+/* style for game type GapFillDragAndDrop */
+
+.type-GapFillDragAndDrop .question {
+  margin-bottom: 10px;
+}
+
+.type-GapFillDragAndDrop .subquestion .form-group {
+  margin-bottom: 0;
+  vertical-align: middle;
+  margin-left: 5px;
+}
+
+.type-GapFillDragAndDrop .ui-sortable .btn {
+  white-space: nowrap;
+  display: inline-block; /* fix ie */
+}
+.type-GapFillDragAndDrop .ui-sortable.gapfield-list .btn {
+  float: left; /* fix ie icon overlape */
+  display: block; /* remove extra space */
+}
+
+.type-GapFillDragAndDrop .gapfield-list .list-group-item {
+	padding-top: 8px;
+	padding-bottom: 8px;
+  margin-right: 0;
+}

@@ -1,0 +1,113 @@
+/* style for game type ImageMatching */
+
+.type-ImageMatching .thumbnail {
+	width: 175px;
+}
+
+.type-ImageMatching .thumbnail > img {
+  margin-bottom: 3px;
+}
+.type-ImageMatching .thumbnail .caption {
+  padding: 0;
+  z-index: 100;
+  position: relative;
+  text-align: center;
+}
+.type-ImageMatching .thumbnail .caption .panel {
+  margin-bottom: 0;
+  text-align: left;
+}
+.type-ImageMatching .thumbnail .caption > .mini-audio,
+.type-ImageMatching .thumbnail .question-audio-only .mini-audio {
+  background-color: #fff;
+  margin: 5px 10px;
+  display: block;
+  height: 27px;
+  text-align: center;
+}
+
+
+.type-ImageMatching .thumbnail .caption > .mini-audio{
+  position: absolute;
+  bottom: 45px;
+  left: -5px;
+}
+
+.type-ImageMatching .thumbnail .question-audio-only .mini-audio {
+  position: relative;
+  height: 110px;
+  font-size: 55px;
+}
+
+.type-ImageMatching .thumbnail .question-audio-only .mini-audio span {
+  font-size: 55px;
+  top: 20px;
+}
+
+.type-ImageMatching .ui-sortable .btn {
+  /*avoid extra pixel*/
+  padding: 8px 12px;
+}
+
+/*
+.type-ImageMatching .question:nth-child(5) {
+  clear: left;
+}*/
+
+/*
+@media all and (max-width: 992px) {
+  .type-ImageMatching .question:nth-child(5) {
+    clear: none;
+  }
+  .type-ImageMatching .question:nth-child(4),
+  .type-ImageMatching .question:nth-child(7) {
+    clear: left;
+  }
+}*/
+
+/*
+.question-wrapper {
+    overflow: hidden; 
+}
+
+.question {
+    margin-bottom: -99999px;
+    padding-bottom: 99999px;
+}
+*/
+
+/*
+.question-wrapper {
+    display: table;
+}
+
+.question {
+    float: none;
+    display: table-cell;
+    vertical-align: top;
+}*/
+
+.type-ImageMatching .question {
+  /*margin-bottom:20px;*/
+/*  width: 175px;
+  height: 180px; /*220px;*/
+/*  float:left;*/
+  margin-right: 10px;
+  display: inline-table;
+  vertical-align: top;
+}
+
+.type-ImageMatching .gapfield-list .btn {
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+.type-ImageMatching .btn-success,
+.type-ImageMatching .btn-success:hover,
+.type-ImageMatching  .btn-danger,
+.type-ImageMatching  .btn-danger:hover { margin-right: 0; }
+
+.type-ImageMatching .gapfield-hint-image-matching
+{
+	background: #dedede;
+}

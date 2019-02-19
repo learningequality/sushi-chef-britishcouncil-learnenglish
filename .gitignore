@@ -8,5 +8,3 @@ cache.sqlite
 restore/
 *.pyc
 *.log
-*.css
-*.html

@@ -1,0 +1,22 @@
+/*------------------------------------*\
+    #lepathways skin
+\*------------------------------------*/
+
+.generalOptions .btn,
+#gameTitleText {
+  color: #658600;
+}
+.carousel-indicators li,
+.carousel-indicators li:after,
+.mejs-controls .mejs-horizontal-volume-slider .mejs-horizontal-volume-current,
+.mejs-controls .mejs-time-rail .mejs-time-current {
+  background-color: #658600;
+}
+
+.carousel-indicators li.active,
+.carousel-indicators li.active:after {
+  background-color: #9bbd34;
+}
+
+/*feedback popup*/
+.ui-draggable .modal-header { border-color: #658600 !important; }

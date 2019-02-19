@@ -1,0 +1,26 @@
+/* style for game type Grouping */
+
+.type-Grouping .gapfield-list-container-heading {
+    margin-bottom: 0;
+}
+
+.type-Grouping .gapfield-list-container-body {
+    padding: 0;
+    margin-bottom: 0;
+}
+
+.type-Grouping .gapfield-list {
+    padding: 5px;
+    margin-bottom: 0;
+    min-height: 48px;
+}
+
+.type-Grouping .panel-default > .panel-heading {
+  line-height: 1.66em;
+}
+
+.type-Grouping .gapfield-hint-grouping
+{
+	color: white;
+	background: #8A8A8A;
+}

@@ -1,0 +1,340 @@
+/* style for game type DuoQuiz */
+
+.toggle-game-options .radio, .toggle-game-options-answers .radio{
+	margin:0 auto;
+	margin-bottom: 15px;
+	line-height: normal;
+	background: url(../images/balloon_burst/btn-bg.jpg) repeat-x;
+	background-size:100% 100%;
+	border-radius: 10px;
+	color:#fff;
+	border:1px solid #b4600e;
+	border-bottom: 1px solid rgba(#b4600e,0);
+	box-shadow: 0 2px 2px rgba(115,115,115,0.4);
+}
+.toggle-game-options .radio:focus, .toggle-game-options-answers .radio:focus{
+}
+.toggle-game-options.has-feedback .radio, .toggle-game-options-answers.has-feedback .radio{
+	box-shadow: 0 2px 2px rgba(115,115,115,0.4) !important;
+}
+
+.toggle-game-options .radio label,.toggle-game-options-answers .radio label {
+	padding: 10px;
+	font-size:20px;
+}
+
+.question {
+	line-height: normal;
+	max-width:80%;
+	margin:0 auto;
+}
+
+.toggle-game-options .radio input[type='radio'],.toggle-game-options-answers .radio input[type='radio'] {
+	display: none;
+}
+
+.toggle-game-options .radio input[type="radio"] + label:before,.toggle-game-options-answers .radio input[type="radio"] + label:before {
+	content: none;
+}
+
+
+.toggle-game-options .radio:hover {
+
+}
+
+.toggle-game-options .active {
+	background: url(../images/label_the_picture/label-pic_btn-bg_selected.png) repeat-x;
+    background-size: 100% 100%;
+    box-shadow: inset 2px 3px 1px rgba(147,47,0,.95);
+}
+
+.toggle-game-options .btn-success {
+	background: url(../images/duo_quiz/btn-correct.jpg) repeat-x;
+	background-size:100% 100%;
+	color: #ffffff;
+	border:1px solid #028007 !important;
+}
+.toggle-game-options .btn-success label{
+	background: url('../images/duo_quiz/icon-feedback-correct.png') center no-repeat;
+	background-size: 30px;
+	background-position-x:99%;
+}
+
+.toggle-game-options .btn-danger {
+	background: url(../images/duo_quiz/btn-incorrect.jpg) repeat-x;
+	background-size:100% 100%;
+	color: #ffffff;
+	border-color: #9a0d0d;
+	opacity: 1;
+}
+.toggle-game-options .btn-danger label{
+	background: url('../images/duo_quiz/icon-feedback-incorrect.png') center no-repeat;
+	background-size: 30px;
+	background-position-x:99%;
+}
+
+/* Fix checkbox */
+.radio > label .glyphicon-remove,
+.radio > label .glyphicon-ok,
+.checkbox > label .glyphicon-remove,
+.checkbox > label .glyphicon-ok {
+	line-height: normal;
+	display: none;
+}
+
+.mode-test_mode .radio.active, .mode-test_mode .checkbox.active{
+	border:1px solid #b4600e;
+}
+
+
+.feedback-panel {
+	border: 0;
+	box-shadow: none;
+}
+
+.feedback-panel .panel-body {
+	font-size: 18px;
+}
+
+/* Panel comment */
+.panel{
+	background: none;
+}
+.panel-default .panel-body{
+	padding-top: 0;
+	padding-left: 0;
+}
+.panel-success .panel-heading {
+	background-color: #8cd00b;
+}
+
+.panel-success .panel-body {
+	background: url('../images/duo_quiz/icon-feedback-correct.png') no-repeat;
+	background-size: 40px;
+	padding-left: 50px;
+	padding-top: 10px;
+	min-height: 50px;
+}
+
+.panel-danger .panel-heading {
+	background-color: #e30b0b;
+	border: 0;
+	color: #ffffff;
+}
+
+.panel-danger .panel-body {
+	background: url('../images/duo_quiz/icon-feedback-incorrect.png') no-repeat;
+	background-size: 40px;
+	padding-left:50px;
+	padding-top: 10px;
+	min-height: 50px;
+}
+
+.panel-info{
+	border:0;
+	box-shadow: none;
+	font-size: 18px;
+}
+
+.toggle-game-options-answers .btn-info {
+	background: url(../images/duo_quiz/btn-correct.jpg) repeat-x;
+	background-size:100% 100%;
+	color: #ffffff;
+	border:1px solid #028007;
+}
+.toggle-game-options-answers .btn-info label{
+	background: url('../images/duo_quiz/icon-feedback-correct.png') center no-repeat;
+	background-size: 30px;
+	background-position-x:99%;
+}
+
+/*.toggle-game-options-answers input[type="radio"] + label:before {
+	content: none;
+}
+
+.toggle-game-options-answers label {
+	padding: 8px 38px;
+	margin-right: 0;
+}
+
+.toggle-game-options-answers .radio {
+	background-color: #ececec;
+	border-radius: 4px;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	-khtml-border-radius: 4px;
+	margin-bottom: 8px;
+	line-height: normal;
+	margin-right: 0;
+}
+
+*/
+
+/* Content */
+.kids-game #landing-page-contents{
+	padding:0;
+	background: #ec5000;
+}
+#landing-page-title{
+	margin-top: -120px;
+}
+#landing-page button{
+	background: url(../images/label_the_picture/label-pic_btn-start.png) center center no-repeat;
+    width: 291px;
+    height: 89px;
+    text-indent: -99999px;
+    margin-top: -82px;
+    transform:scale(0.75,0.75);
+    image-rendering: -webkit-optimize-contrast;
+}
+#myNavmenuCanvas {
+	background: #fccb7e url('../images/duo_quiz/stage.jpg') center bottom no-repeat;
+	background-size: contain;
+	position: relative;
+	min-height: 580px;
+}
+
+.text-question{
+	display: table-cell;
+	vertical-align: middle;
+	height: 65px;
+	text-align: center;
+	font-size:24px;
+	line-height: 24px;
+	margin:0 auto;
+	text-align: left;
+}
+#ajax-pages{
+	float: none !important;
+	max-width: 80%;
+	margin:0 auto;
+	text-align: center;
+}
+#lowerButtonRow{
+	text-align: center;
+}
+.progress-indicator{
+	float: none;
+	display: inline-block;
+}
+.progress-indicator ul{
+	float: none;
+}
+.progress-indicator .carousel-indicators li:after{
+	width: 21px;
+}
+.progress-indicator .carousel-indicators li.active{
+	background-color: #d93d01;
+}
+.carousel-indicators{
+	margin-bottom: 20px;
+}
+#btn-prev{
+	background: url(../images/duo_quiz/btn-previous.png) center center no-repeat;
+	background-size: contain;
+    width: 145.5px;
+    height: 44.5px;
+    border-radius: 0;
+    text-indent: -99999px;
+    image-rendering: -webkit-optimize-contrast;
+    margin-right: 5px;
+}
+#btn-next{
+	background: url(../images/duo_quiz/btn-next.png) center center no-repeat;
+	background-size: contain;
+    width: 145.5px;
+    height: 44.5px;
+    border-radius: 0;
+    text-indent: -99999px;
+    image-rendering: -webkit-optimize-contrast;
+    margin-left: 5px;
+}
+.kids-game .generalOptions .btn{
+	color:#fff;
+	-webkit-border-radius: 8px;
+	-moz-border-radius: 8px;
+	border-radius: 8px;
+	background-color: #ffc436;
+	-webkit-box-shadow: 0 3px 2px rgba(0,0,0,.2);
+	-moz-box-shadow: 0 3px 2px rgba(0,0,0,.2);
+	box-shadow: 0 3px 2px rgba(0,0,0,.2);
+	border: solid 1px #b4600e;
+	background-image: -webkit-linear-gradient(bottom, #c44e00 3%, #ae4601 64%);
+	background-image: -moz-linear-gradient(bottom, #c44e00 3%, #ae4601 64%);
+	background-image: -o-linear-gradient(bottom, #c44e00 3%, #ae4601 64%);
+	background-image: -ms-linear-gradient(bottom, #c44e00 3%, #ae4601 64%);
+	background-image: linear-gradient(to top, #c44e00 3%, #ae4601 64%);
+}
+@media screen and (max-width:768px){
+	.radio, .checkbox{
+		padding:4px !important;
+	}
+	.kids-game-header{
+		margin-left: 0;
+	}
+	#myNavmenuCanvas {
+		background: #fccb7e url('../images/duo_quiz/stage-mobile.jpg') center bottom no-repeat;
+		background-size: contain;
+		background-position-y: calc(100% - 40px);
+		padding-bottom: 40px;
+	}
+	#myNavmenuCanvas:before{
+		content:'';
+		position: absolute;
+		bottom:0;
+		left: 0;
+		width: 100%;
+		height:40px;
+		background: #ec5000;
+	}
+	.question{
+		max-width: 100%;
+	}
+	#ajax-pages{
+		max-width: 100%;
+	}
+	#lowerButtonRow{
+		margin-bottom:-20px;
+	}
+	#lowerButtonRow .btn{
+		width: 30.333333%;
+		margin-right: 0;
+		margin:0 0.5%;
+		padding:5px 10px;
+	}
+}
+@media screen and (max-width:610px){
+	#landing-page-title{
+		margin-top: -100px;
+	}
+	#landing-page button{
+		transform: scale(0.6,0.6);
+	}
+}
+@media screen and (max-width:520px){
+	#landing-page-title{
+		margin-top: 0;
+		display: none;
+	}
+	#landing-page button{
+		transform: scale(0.8);
+		margin-top: 20px;
+	}
+
+	#lowerButtonRow .btn{
+		font-size: 14px;
+	}
+}
+@media screen and (max-width:420px){
+
+	.carousel-indicators li, .carousel-indicators li.active{
+		width:10px;
+		height: 10px;
+	}
+}
+@media screen and (max-width:380px){
+	#btn-prev,#btn-next{
+		width: 116px;
+		height:35px;
+	}
+}

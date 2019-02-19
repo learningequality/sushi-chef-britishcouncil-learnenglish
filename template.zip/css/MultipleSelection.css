@@ -1,0 +1,29 @@
+/* style for game type MultipleSelection */
+
+body:before {
+  content: url('../images/checkbox_btn_check.png');
+  display:none;
+}
+
+.toggle-game-options .btn:hover {
+  border-width: 0 1px 4px 1px;
+}
+
+.orientation-vertical a.form-group,
+.orientation-vertical a.btn-info
+.orientation-vertical a.btn-default, {
+	display: block;
+}
+.orientation-horizontal a.form-group,
+.orientation-horizontal a.btn-info,
+.orientation-horizontal a.btn-default,
+div.orientation-horizontal div.checkbox {
+	display: inline-block;
+	margin-right: 3px;
+}
+.selection-mode-deletion a.form-group.active,
+.selection-mode-deletion a.btn-info,
+div.selection-mode-deletion div.active > label,
+div.selection-mode-deletion div.btn-info > label {
+	text-decoration: line-through;
+}

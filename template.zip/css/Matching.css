@@ -1,0 +1,12 @@
+/* style for game type Matching */
+
+.type-Matching .question .row {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.type-Matching .gapfield-list .btn {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  margin-right: 0;
+}

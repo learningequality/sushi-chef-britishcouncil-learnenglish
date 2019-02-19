@@ -1,0 +1,218 @@
+/* style for game type FindThePairs */
+
+.type-FindThePairs #button-start {
+	background: url('../images/label_the_picture/label-pic_btn-start.png') center center no-repeat;
+	width: 291px;
+	height: 89px;
+	text-indent: -99999px;
+	margin-top: -120px;
+}
+
+#myNavmenuCanvas {
+	background: url('../images/find_the_pair/pair-bg.jpg') center center no-repeat;
+	background-size: cover;
+}
+
+#exerciseColumn {
+	width: 92%;
+	margin-left: 4%;
+}
+
+#exercisePanel {
+	border: 1px solid #eebc80;
+	border-radius: 8px;
+	background-color: #fef6e5;
+	padding: 16px 0;
+}
+
+.pair-item {
+	width: 24%;
+	height: 120px;
+	font-weight: bold;
+	line-height: 12px;
+	margin-left: 0.5%;
+	margin-right: 0.5%;
+	margin-bottom: 8px;
+	cursor: pointer;
+	float: left;
+	background-color: #ffffff;
+	padding: 8px;
+	border: 1px solid #eecfb9;
+	border-radius: 8px;
+    overflow: hidden;
+}
+.pair-item-text[data-side=back]{
+	background: #fde5b5;
+}
+
+.pair-item img {
+	width: 100%;
+	height: auto;
+}
+
+.pair-item-face-side {
+	background: url('../images/find_the_pair/item-bg.jpg') center center no-repeat;
+	height: 100px;
+}
+.pair-item-back-side{
+	border-radius: 8px;
+	color:#d93d01;
+	font-size: 22px;
+}
+
+.pair-item:hover {
+	border-color: #d93d01;
+}
+
+.pair-item.selected {
+	padding: 6px 8px;
+	border:5px solid #fea204;
+}
+
+.pair-item.correct {
+	padding: 6px 8px;
+	position: relative;
+	border:5px solid #29893d;
+}
+.pair-item.correct:after{
+	content:'';
+	background-image: url('../images/icon-tick.png');
+	background-repeat: no-repeat;
+	background-size: 20px;
+	background-position: center;
+	height:20px;
+	width:20px;
+	position: absolute;
+	top:5px;
+	right:5px;
+	z-index: 20;
+}
+
+.pair-item.incorrect {
+	padding: 6px 8px;
+	position: relative;
+	border:5px solid #bc120e;
+}
+.pair-item.incorrect:after{
+	content:'';
+	background-image: url('../images/icon-cross.png');
+	background-repeat: no-repeat;
+	background-size: 20px;
+	background-position: center;
+	height:20px;
+	width:20px;
+	position: absolute;
+	top:5px;
+	right:5px;
+	z-index: 20;
+}
+
+.pair-item.disabled {
+}
+
+.pair-item[disabled] {
+	cursor: initial;
+}
+
+.pair-item[disabled]:hover,
+.pair-item[disabled]:focus
+{
+
+}
+
+[data-side=face] .pair-item-back-side,
+[data-side=back] .pair-item-face-side {
+	display: none;
+}
+
+#questions {
+	margin-bottom: 0;
+}
+
+.kids-game #gameQuestionsRemainingText {
+	color: #de4f0e;
+}
+
+#landing-page-contents {
+	background-color: #f86a02;
+}
+
+// #exercisePanel #questions > .row > div {
+// 	overflow: auto;
+// }
+
+
+@media all and (max-width: 768px) {
+	.type-FindThePairs #button-start {
+		margin-top: -25px;
+	}
+
+	#ajax-cont {
+		padding-left: 5px;
+		padding-right: 5px;
+	}
+
+	#exercisePanel {
+		padding-top: 5px;
+		padding-bottom: 5px;
+	}
+
+	#exerciseColumn {
+		width: 98%;
+		margin-left: 1%;
+	}
+
+	.pair-item {
+		width: 24%;
+		margin-left: 0.5%;
+		margin-right: 0.5%;
+		margin-bottom: 5px;
+		height: 110px;
+		padding: 3px;
+	}
+
+	.pair-item-face-side {
+		height: 90px;
+		background-size: contain;
+	}
+
+	.kids-game-header {
+		margin-left: 0;
+		margin-right: 0;
+		width: 100%;
+	}
+
+	.kids-game-header .col-left {
+		padding-left: 0;
+		padding-right: 0;
+	}
+}
+
+.kids-game .generalOptions .btn{
+	color:#fff;
+	-webkit-border-radius: 8px;
+	-moz-border-radius: 8px;
+	border-radius: 8px;
+	background-color: #ffc436;
+	-webkit-box-shadow: 0 3px 2px rgba(0,0,0,.2);
+	-moz-box-shadow: 0 3px 2px rgba(0,0,0,.2);
+	box-shadow: 0 3px 2px rgba(0,0,0,.2);
+	border: solid 1px #b4600e;
+	background-image: -webkit-linear-gradient(bottom, #c44e00 3%, #ae4601 64%);
+	background-image: -moz-linear-gradient(bottom, #c44e00 3%, #ae4601 64%);
+	background-image: -o-linear-gradient(bottom, #c44e00 3%, #ae4601 64%);
+	background-image: -ms-linear-gradient(bottom, #c44e00 3%, #ae4601 64%);
+	background-image: linear-gradient(to top, #c44e00 3%, #ae4601 64%);
+}
+@media screen and (max-width:767px){
+	.pair-item-face-side{
+		height:100%;
+		background-size: cover;
+	}
+}
+@media screen and (max-width:605px){
+	.pair-item{
+		width:49%;
+		height:170px;
+	}
+}
