@@ -23,7 +23,7 @@ add_file.metadata = {"license": SpecialPermissionsLicense("British Council", "Sp
                      "copyright_holder": "British Council"}
 
 LOGGER = logging.getLogger()
-DEBUG = False
+DEBUG = True
 def _add_child(self, node):
         """ add_child: Adds child node to node
             Args: node to add as child

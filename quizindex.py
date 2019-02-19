@@ -47,4 +47,5 @@ def download():
             xmlout.write(xml_content)
         
 
-download()
+if __name__ == "__main__":
+    download()

@@ -101,7 +101,7 @@ def individual(url = "https://learnenglish.britishcouncil.org/en/youre-hired/epi
         video = BeautifulSoup('<video controls><source src="http://www.viddler.com/file/{}/html5" type="video/mp4"></video>'.format(viddler_id), "html5lib").find("video")
         vid.replaceWith(video)
        
-   
+     
     iframes = article.find_all("iframe")
     print ("IFRAME?")
     for iframe in iframes:
@@ -113,7 +113,7 @@ def individual(url = "https://learnenglish.britishcouncil.org/en/youre-hired/epi
             iframe.replaceWith(video)
         else:
             print ("IFRAME :(")
-            iframe.extract()
+    #        iframe.extract()  # QUIZ-DRAGON
     return article, metadata
 
 def get_individual_page(url):

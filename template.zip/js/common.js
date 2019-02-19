@@ -46,7 +46,7 @@ var getPageCallback = null;
 
 
 var use_floating_button_row = false;
-var isGameInAdvanceSlide = (parent != null && parent.advanceSlideID != null);
+var isGameInAdvanceSlide = false; // dragon
 
 var SURVEY_MODE = 'survey_mode';
 var isIosSafari = /iP(ad|hone|od).+Version\/[\d\.]+.*Safari/i.test(navigator.userAgent);
@@ -456,7 +456,7 @@ function onNextExercise(obj) {
     //onConfirmedFinish();
 
     // check if unit exists and have next page/chapter
-    if (typeof parent.unitReady != 'undefined' && typeof parent.chapterReady != 'undefined') {
+    if (false) { // dragon
         /*
         var hasNext = parent.doesChapterHaveNextPage() || parent.doesUnitHaveNextChapter();
 
@@ -465,7 +465,7 @@ function onNextExercise(obj) {
         	parent.goNext();
         }*/
 
-        parent.goNext();
+        //parent.goNext();
     }
 }
 
@@ -486,7 +486,7 @@ function setExerciseMode() {
     $('#scoreButton').addClass('hidden');
 
     // check if next button should exist or not
-    if (typeof parent.unitReady != 'undefined' && typeof parent.chapterReady != 'undefined') {
+    if (true) { //dragon
         /*var hasNext = parent.doesChapterHaveNextPage() || parent.doesUnitHaveNextChapter();
 
         if(hasNext)
@@ -623,7 +623,7 @@ function setExerciseMode() {
     }
 
 
-    if (typeof parent.unitReady != 'undefined' && typeof parent.chapterReady != 'undefined') {
+    if (false) { // dragon
         var hasNext = parent.doesChapterHaveNextPage() || parent.doesUnitHaveNextChapter();
 
         if (hasNext) {
@@ -1131,7 +1131,7 @@ function entryPoint() {
 
             if(use_dummy_learner_response == false)
             {
-                if(typeof parent.GetLearnerResponse == 'function') 
+                if(false) // dragon 
                 { 
                   // window.frameElement Gets IFrame element which document inside
                 var chapter_index = window.frameElement.getAttribute("data-chapter-index");
@@ -1783,11 +1783,11 @@ function parseGameXMLParameters(xml) {
         }
 
         // check mode
-        if (typeof parent.unitMode != 'undefined' && parent.unitMode != 'none') {
+        if (false) { // dragon
             gameMode = parent.unitMode;
             gameModeOptions = parent.unitModeOptions;
         }
-		else if (isGameInAdvanceSlide && typeof parent.parent.unitMode != 'undefined' && parent.parent.unitMode != 'none')
+		else if (false) // dragon
 		{
 			gameMode = parent.parent.unitMode;
             gameModeOptions = parent.parent.unitModeOptions;
@@ -1943,12 +1943,12 @@ function onTryAgain(obj) {
 
     // call RemoveLearnerResponse() to remove previous attempt
 
-    if (typeof parent.RemoveLearnerResponse == 'function') {
+    if (false) { // dragon
         //
         var chapter_index = window.frameElement.getAttribute("data-chapter-index");
         var page_index = window.frameElement.getAttribute("data-page-index");
         //
-        parent.RemoveLearnerResponse(chapter_index, page_index);
+        // parent.RemoveLearnerResponse(chapter_index, page_index);
     }
     
     //stopAllSound();
@@ -2057,12 +2057,12 @@ function onReset() {
 
         if (cOst > ost) {
             $('body').addClass('hide-ui').removeClass('default');
-            if (typeof parent.unitReady != 'undefined' && typeof parent.chapterReady != 'undefined') {
+            if (false) { //dragon
                 parent.hideHeader();
             }
         } else {
             $('body').addClass('default').removeClass('hide-ui');
-            if (typeof parent.unitReady != 'undefined' && typeof parent.chapterReady != 'undefined') {
+            if (false) { //dragon
                 parent.showHeader();
             }
         }
@@ -2072,14 +2072,14 @@ function onReset() {
 
     $("#questions").focusin(function() {
         $('body').addClass('hide-ui').removeClass('default');
-        if (typeof parent.unitReady != 'undefined' && typeof parent.chapterReady != 'undefined') {
+        if (false) { // dragon
             parent.hideHeader();
         }
     });
 
     $("#questions").focusout(function() {
         $('body').addClass('default').removeClass('hide-ui');
-        if (typeof parent.unitReady != 'undefined' && typeof parent.chapterReady != 'undefined') {
+        if (false) { // dragon
             parent.showHeader();
         }
     });
@@ -2251,11 +2251,11 @@ function onScore(obj) {
 
 		if (parent != null)
 		{
-			if (parent.isNoScoreForNoCorrectAnswerExercise)
+			if (false)
 			{
 				isConcatMsg = false;
 			}
-			else if (isGameInAdvanceSlide && parent.parent.isNoScoreForNoCorrectAnswerExercise)
+			else if (false)
 			{
 				isConcatMsg = false;
 			}
@@ -2425,11 +2425,11 @@ function onConfirmedFinish() {
 
 			if (parent != null)
 			{
-				if (parent.isNoScoreForNoCorrectAnswerExercise)
+				if (false)
 				{
 					isConcatMsg = false;
 				}
-				else if (isGameInAdvanceSlide && parent.parent.isNoScoreForNoCorrectAnswerExercise)
+				else if (false)
 				{
 					isConcatMsg = false;
 				}
@@ -2577,7 +2577,7 @@ function onConfirmedFinish() {
 
                         var msg = "Your score has been recorded";
 
-						if (parent != null && parent.isNoScoreForNoCorrectAnswerExercise)
+						if (false) // dragon
 						{
 							msg = noCorrectMessage;
 						}
@@ -2657,7 +2657,7 @@ function onConfirmedFinish() {
 
     }
 
-    if(!sample) // if NO prev learner response found, show score popup
+    if(false) // if NO prev learner response found, show score popup
     {
 		var lvFrameElement;
 
@@ -2698,11 +2698,11 @@ function onConfirmedFinish() {
 
     //@ check unit mode
     if (getMode() == "placement_test" || getMode() == SURVEY_MODE) {
-        if (typeof parent.goNext == 'function') {
+        if (false) {
             parent.goNext();
         }
 
-		if (getMode() == 'placement_test' && typeof parent.ScormSetPlacementTestResult == 'function')
+		if (false)
 		{
 			parent.ScormSetPlacementTestResult();
 		}
@@ -2713,7 +2713,7 @@ function onConfirmedFinish() {
 
 function getMode() {
     var mode = "test_mode";
-
+    /*
     //if(typeof IS_CITRUS != 'undefined' && IS_CITRUS == true)
     //{
     if ((typeof parent.unitMode != 'undefined' && parent.unitMode == "placement_test") || (isGameInAdvanceSlide && typeof parent.parent.unitMode != 'undefined' && parent.parent.unitMode == "placement_test")) {
@@ -2729,7 +2729,7 @@ function getMode() {
         mode = "test_mode";
     }
     //}
-
+    */ //dragon
     return mode;
 }
 

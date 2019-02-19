@@ -58,6 +58,9 @@ url_list = [
     "http://learnenglishteens.britishcouncil.org/skills/writing/intermediate-B1-writing?singleton",
     "http://learnenglishteens.britishcouncil.org/skills/writing/upper-intermediate-B2-writing?singleton",
     "http://learnenglishteens.britishcouncil.org/skills/writing/advanced-C1-writing?singleton",
+    "http://learnenglishteens.britishcouncil.org/vocabulary/beginner-vocabulary?singleton",
+    "http://learnenglishteens.britishcouncil.org/vocabulary/advanced-vocabulary?singleton",
+
 ]
 
 def all_entries():

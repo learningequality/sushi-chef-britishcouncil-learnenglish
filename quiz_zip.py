@@ -18,6 +18,9 @@ def clean_zip():
         if e.errno != 2: raise  # no such file or directory
     shutil.copytree(TEMPLATE_DIR, TARGET_DIR)
 
+def zip_bits():
+    shutil.copytree(TEMPLATE_DIR, TARGET_DIR)
+
 def handle_xml(xml_data):
     """Download images etc. used by XML file and modify XML file to point to them"""
     root = lxml.etree.fromstring(xml_data)
@@ -54,6 +57,7 @@ def handle_xml(xml_data):
 
 def create_quiz(xml_url, title="Quiz"):
     """Download XML and create Quiz HTML"""
+    print (repr(xml_url))
     xml_full_url = urljoin(BASE_URL, xml_url)
     xml_filename = xml_url.split("/")[-1]
     html_filename = xml_filename.replace(".xml", ".html")
@@ -68,11 +72,13 @@ def create_quiz(xml_url, title="Quiz"):
     xml_data = handle_xml(xml_request.content)
     with open(TARGET_DIR+xml_filename, "wb") as f:
         f.write(xml_data)
+    return html_filename
 
-clean_zip()
-with open("sample_xml_list.txt") as f:
-    for x in f.readlines():
-        create_quiz(x.strip())
+if __name__ == "__main__":
+    clean_zip()
+    with open("sample_xml_list.txt") as f:
+        for x in f.readlines():
+            create_quiz(x.strip())
 
 #create_quiz(XML1_URL)
 #create_quiz(XML2_URL)

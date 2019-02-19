@@ -12,7 +12,8 @@ import shutil
 from mime import mime
 import urllib3
 import youtube
-
+import quizindex
+import quiz_zip
 urllib3.disable_warnings()
 requests_cache.install_cache()
 
@@ -22,6 +23,7 @@ from ricecooker.classes.files import HTMLZipFile, VideoFile, SubtitleFile, Downl
 DOMAINS = ["learnenglish.britishcouncil.org", "learnenglishteens.britishcouncil.org", "learnenglishkids.britishcouncil.org", ""]
 LINK_ATTRIBUTES = ["src", "href"]
 DOWNLOAD_FOLDER = "downloads"
+quiz_zip.TARGET_DIR = DOWNLOAD_FOLDER+"/"
 headers = {"User-Agent": "Mozilla"}
                     
 #response = requests.get(sample_url, headers=headers)
@@ -98,6 +100,8 @@ def make_local(soup_data, page_url, delete=True):
         pass
 
     soup = BeautifulSoup("", "html5lib")  # reify html chunk to a soup.
+    has_game = soup.find("iframe", {"src": True})
+    
     soup.append(soup_data)
 
     make_links_absolute(soup, page_url)
@@ -112,49 +116,71 @@ def make_local(soup_data, page_url, delete=True):
         elem.extract()
 
     # delete Task X messages
-    for elem in soup(text=re.compile(r'(?:Task|Activity|Mitigators) \d+')):  # TODO - consider finding all single-word + number
-        print (elem)
-        elem.extract()
+    #for elem in soup(text=re.compile(r'(?:Task|Activity|Mitigators) \d+')):  # TODO - consider finding all single-word + number
+    #    print (elem)
+    #    elem.extract()
     
-    for elem in soup(text=re.compile(r'Game')):  # TODO - consider finding all single-word + number
-        print (elem)
-        elem.extract()
+    #for elem in soup(text=re.compile(r'Game')):  # TODO - consider finding all single-word + number
+    #    print (elem)
+    #    elem.extract()
 
-    # complicated -- delete 
-    for fieldset in soup.find_all("fieldset"):
-        xml_elements = fieldset.find_all("a", {"class": "embed"})
-        iframes = fieldset.find_all("iframe")
-        video = fieldset.find_all("video")
-        if not xml_elements and not iframes and not video:
-            continue
-        [x.extract() for x in xml_elements]
-       
-        #[x.extract() for x in iframes]
+    clean_zip = False
+    for iframe in soup.find_all("iframe"):
+        if 'src' not in iframe.attrs: continue
+        print ("IFRAME QUIZ BEING DECODED!!!")
+        src = iframe.attrs['src']
+        assert "gamedata" in src, "no gamedata in "+src
+        if not clean_zip:
+            quiz_zip.clean_zip()
+            clean_zip = True
+        xml_url, xml_content = quizindex.get_quiz_xml(src)
+        html_filename = quiz_zip.create_quiz(xml_url.decode('utf-8'), title = "Quiz") # TODO -- give better title; avoid dl XML twice
+        iframe.attrs['src'] = html_filename
+        #new_tag = soup.new_tag("a")
+        #new_tag.attrs['href'] = html_filename
+        #new_tag.attrs['target'] = "_blank"
+        #new_tag.string="Open quiz in a new window"
+   
+        #iframe.replaceWith(new_tag)
         
-        legend = fieldset.find("legend")
-        if len ("".join(fieldset.strings)) - len("".join(legend.strings))> 60:
-            continue
-        if fieldset.find("img") or fieldset.find("a"):
-            continue
-        fieldset.extract()
-
-    for collapsible in soup.find_all("div", {"class": "collapsible"}):
-        strings = "".join(collapsible.strings).strip()
-        if len (strings) < 40:
-            collapsible.extract()
-
-    # delete quizzes
-    xml_elements = soup.find_all("a", {"class": "embed"})
-    for xml in xml_elements:
-        # insert quiz placeholder
-        xml.extract()
-
-    #[x.extract() for x in soup.find_all('iframe')] 
-
     try:
         os.mkdir(DOWNLOAD_FOLDER)
     except FileExistsError:
         pass
+
+
+    if has_game: assert soup.find("iframe", {"src": True})
+    # complicated -- delete
+    # QUIZ-DRAGON
+    # 
+    #for fieldset in soup.find_all("fieldset"):
+    #    xml_elements = fieldset.find_all("a", {"class": "embed"})
+    #    iframes = fieldset.find_all("iframe")
+    #    video = fieldset.find_all("video")
+    #    if not xml_elements and not iframes and not video:
+    #        continue
+    #    [x.extract() for x in xml_elements]
+    #   
+    #    #[x.extract() for x in iframes]
+    #    
+    #    legend = fieldset.find("legend")
+    #    if len ("".join(fieldset.strings)) - len("".join(legend.strings))> 60:
+    #        continue
+    #    if fieldset.find("img") or fieldset.find("a"):
+    #        continue
+    #    fieldset.extract()
+#
+#    for collapsible in soup.find_all("div", {"class": "collapsible"}):
+#        strings = "".join(collapsible.strings).strip()
+#        if len (strings) < 40:
+#            collapsible.extract()
+
+    # delete quizzes
+#    xml_elements = soup.find_all("a", {"class": "embed"})
+#    for xml in xml_elements:
+#        # insert quiz placeholder
+#        xml.extract()
+# QUIZ-DRAGON
 
     raw_url_list = [resource.attrs.get('href') or resource.attrs.get('src') for resource in resources if "mailto:"]
     url_list = [x for x in raw_url_list if not x.startswith("mailto:")]
@@ -228,6 +254,7 @@ def make_local(soup_data, page_url, delete=True):
                     resource.attrs[attribute] = resource_filenames[attribute_value]
                     continue
 
+    if has_game: assert soup.find("iframe", {"src": True})
 
     html = soup_to_bytes(soup)
 
