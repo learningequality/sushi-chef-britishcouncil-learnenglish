@@ -114,6 +114,14 @@ def make_local(soup_data, page_url, delete=True):
 
     for elem in soup.find_all("div", {"class": "field-name-comment-count"}):
         elem.extract()
+    for elem in soup.find_all("div", {"class": "field-name-field-grammar"}):
+        elem.extract()
+    for elem in soup.find_all("div", {"class": "field-name-field-language-level"}):
+        elem.extract()
+    for elem in soup.find_all("div", {"class": "field-name-field-topics"}):
+        elem.extract()
+    for elem in soup.find_all("a", {"typeof": "skos:Concept"}):
+        elem.extract()
 
     # delete Task X messages
     #for elem in soup(text=re.compile(r'(?:Task|Activity|Mitigators) \d+')):  # TODO - consider finding all single-word + number
