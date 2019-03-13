@@ -85,9 +85,12 @@ def create_node(file_class=None, url=None, filename=None, title=None, license=No
     if file_class is None:
         with open(filename, "rb") as f:
             magic_bytes = f.read(8)[:8]
-        file_class = guess_type(content_type=mime,
-                                extension=guess_extension(url),
-                                magic=magic_bytes)
+        try:
+            file_class = guess_type(content_type=mime,
+                                    extension=guess_extension(url),
+                                    magic=magic_bytes)
+        except UnidentifiedFileType:
+            raise UnidentifiedFileType([url, filename])
         # there is a reasonable chance that the file isn't actually a suitable filetype
         # and that guess_type will raise an UnidentifiedFileType error.
     assert file_class

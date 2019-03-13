@@ -13,6 +13,7 @@ import enggrammar
 import kidsindex
 import teenindex
 from ricecooker.chefs import SushiChef
+import mininode
 
 #import quiz
 from ricecooker.classes.licenses import SpecialPermissionsLicense
@@ -23,7 +24,7 @@ add_file.metadata = {"license": SpecialPermissionsLicense("British Council", "Sp
                      "copyright_holder": "British Council"}
 
 LOGGER = logging.getLogger()
-DEBUG = False
+DEBUG = True
 def _add_child(self, node):
         """ add_child: Adds child node to node
             Args: node to add as child
@@ -119,12 +120,20 @@ class BritishCouncilChef(SushiChef):
                     if metadata.crumb[-1] == "Word on the Street":
                         continue
 
-                    node = add_file.create_node(filename=zip_file,
-                                                file_class=HTMLZipFile,
-                                                title = metadata.title,
-                                                description = metadata.desc
-                                                )
-                    cat_node.add_child(node)
+                    ## OLD
+                    # node = add_file.create_node(filename=zip_file,
+                    #                             file_class=HTMLZipFile,
+                    #                             title = metadata.title,
+                    #                             description = metadata.desc
+                    #                            )
+
+                    parent_node = TopicNode(source_id=zip_file,
+                                       title=metadata.title,
+                                       description="")
+                    cat_node.add_child(parent_node)
+                    for node in mininode.ZipHandler(zip_file).get_nodes():
+                        parent_node.add_child(node)
+                      
 
         if not DEBUG: 
             handle_index(index.all_entries(), "Adults")
@@ -133,21 +142,12 @@ class BritishCouncilChef(SushiChef):
 
         #node = quiz.do_it()
         
+        # for some reason we were doing this twice: not sure why.        
         for title, zip_file in enggrammar.index():
             if DEBUG:
                 break
             cat_node = build_structure(["Home", "Adults", "Grammar", "English Grammar"])
-            node = add_file.create_node(filename=zip_file,
-                                        file_class=HTMLZipFile,
-                                        title = title.text,
-                                        description = ""
-                                        )
-            cat_node.add_child(node)
-        
-        for title, zip_file in enggrammar.index():
-            if DEBUG:
-                break
-            cat_node = build_structure(["Home", "Teens", "Grammar", "English Grammar"])
+            raise RuntimeError("OLD HTML")
             node = add_file.create_node(filename=zip_file,
                                         file_class=HTMLZipFile,
                                         title = title.text,

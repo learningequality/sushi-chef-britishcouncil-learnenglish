@@ -95,5 +95,6 @@ class ZipHandler(object):
     def __del__(self):
         self.my_zip.close()
         
-nodes = ZipHandler(sample_filename).get_nodes()
-print (nodes)
+if __name__ == "__main__":
+    nodes = ZipHandler(sample_filename).get_nodes()
+    print (nodes)
