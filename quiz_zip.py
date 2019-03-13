@@ -11,17 +11,21 @@ XML1_URL = "//gamedata.britishcouncil.org/d/ImageMatching_MjA0MDA=.xml"
 XML2_URL = "//gamedata.britishcouncil.org/d/FindThePairs_ODA0NQ==.xml"
 BASE_URL =  "http://gamedata.britishcouncil.org/sites/all/modules/lep25loader/theme/"
 
-def clean_zip():
+def clean_zip(directory = None):
+    if not directory:
+        directory = TARGET_DIR
     try:
-        shutil.rmtree(TARGET_DIR)
+        shutil.rmtree(directory)
     except OSError as e:
         if e.errno != 2: raise  # no such file or directory
-    shutil.copytree(TEMPLATE_DIR, TARGET_DIR)
+    shutil.copytree(TEMPLATE_DIR, directory)
 
 def zip_bits():
     shutil.copytree(TEMPLATE_DIR, TARGET_DIR)
 
-def handle_xml(xml_data):
+def handle_xml(xml_data, directory = None):
+    if not directory:
+        directory = TARGET_DIR
     """Download images etc. used by XML file and modify XML file to point to them"""
     root = lxml.etree.fromstring(xml_data)
     url_nodes = root.xpath("//URL")
@@ -34,7 +38,7 @@ def handle_xml(xml_data):
             print (e, url)
             continue
         filename = "resource/"+url.split("/")[-1]
-        with open(TARGET_DIR + filename, "wb") as f:
+        with open(directory + filename, "wb") as f:
             f.write(response.content)
         url_node.text = filename
     url_nodes= root.xpath("//*[@url]")
@@ -47,13 +51,32 @@ def handle_xml(xml_data):
             print (e,url)
             continue
         filename = "resource/"+url.split("/")[-1]
-        with open(TARGET_DIR + filename, "wb") as f:
+        with open(directory + filename, "wb") as f:
             f.write(response.content)
         url_node.attrib["url"] = filename
 
     return lxml.etree.tostring(root)
 
-
+def create_standalone_quiz(xml_full_url, title="Quiz"):
+    #xml_filename = xml_url.split("/")[-1]
+    #html_filename = xml_filename.replace(".xml", ".html")
+    clean_zip("demo.zip/")
+    xml_filename = xml_full_url.split("/")[-1]
+    html_filename = xml_filename.replace(".xml", ".html")
+    with open(NUGGET_DIR+"quiz.html", "r") as f:
+        html = f.read()
+    html = html.replace("%%%TITLE", title)
+    html = html.replace("%%%XML", xml_filename)
+    with open("demo.zip/"+html_filename, "w") as f:
+        f.write(html)
+    xml_request = requests.get(xml_full_url)
+    xml_request.raise_for_status()
+    xml_data = handle_xml(xml_request.content, "demo.zip/")
+    with open("demo.zip/"+xml_filename, "wb") as f:
+        f.write(xml_data)
+    with open("demo.zip/index.html", "w") as f:
+        f.write("""<meta http-equiv="refresh" content="0; URL='{}'" />""".format(html_filename))
+    return
 
 def create_quiz(xml_url, title="Quiz"):
     """Download XML and create Quiz HTML"""

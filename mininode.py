@@ -1,9 +1,10 @@
+import shutil
 import zipfile
 import lxml.html
 import magic
 import add_file
 import os
-
+import quiz_zip
 from ricecooker.classes.files import HTMLZipFile
 from ricecooker.classes.licenses import SpecialPermissionsLicense
 
@@ -22,6 +23,7 @@ image/
 WANTED_LIST = """
 video/
 application/pdf
+audio/
 """.strip().split("\n")
 
 try:
@@ -74,6 +76,16 @@ class ZipHandler(object):
                                     file_class = HTMLZipFile,
                                     title = "Transcript")
 
+    def handle_quiz(self, html_filename):
+        url = "http://gamedata.britishcouncil.org/d/" + html_filename.replace(".html", ".xml")
+        quiz_zip.create_standalone_quiz(url)
+        ## now zip up the directory called demo.zip/
+        print ("FOUND {} FILES".format( len(os.listdir("demo.zip/") )))
+        zipfile_name = shutil.make_archive("__mini/"+counter(), "zip", "demo.zip/")
+        return add_file.create_node(filename = zipfile_name,
+                                    file_class = HTMLZipFile,
+                                    title = "Quiz") 
+
     def get_nodes(self):
         root = lxml.html.fromstring(self.my_zip.read("index.html"))
         nodes = []
@@ -88,8 +100,10 @@ class ZipHandler(object):
                     nodes.append(self.consider_file(element, href))
             except KeyError as e:
                 assert "There is no item " in str(e)
+            if src and element.tag == "iframe":
+                nodes.append(self.handle_quiz(src))
             if _class and "field-name-field-transcript" in _class:
-                nodes.append(self. make_transcript(element))
+                nodes.append(self.make_transcript(element))
         return [x for x in nodes if x is not None]
 
     def __del__(self):
