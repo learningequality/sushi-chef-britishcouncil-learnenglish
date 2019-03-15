@@ -24,7 +24,7 @@ add_file.metadata = {"license": SpecialPermissionsLicense("British Council", "Sp
                      "copyright_holder": "British Council"}
 
 LOGGER = logging.getLogger()
-DEBUG = True
+DEBUG = False
 def _add_child(self, node):
         """ add_child: Adds child node to node
             Args: node to add as child
@@ -126,6 +126,7 @@ class BritishCouncilChef(SushiChef):
                     #                             title = metadata.title,
                     #                             description = metadata.desc
                     #                            )
+                    # cat_node.add_child(node)
 
                     parent_node = TopicNode(source_id=zip_file,
                                        title=metadata.title,
@@ -147,13 +148,19 @@ class BritishCouncilChef(SushiChef):
             if DEBUG:
                 break
             cat_node = build_structure(["Home", "Adults", "Grammar", "English Grammar"])
-            raise RuntimeError("OLD HTML")
-            node = add_file.create_node(filename=zip_file,
-                                        file_class=HTMLZipFile,
-                                        title = title.text,
-                                        description = ""
-                                        )
-            cat_node.add_child(node)
+            # OLD
+            # node = add_file.create_node(filename=zip_file,
+            #                             file_class=HTMLZipFile,
+            #                             title = title.text,
+            #                             description = ""
+            #                             )
+            # cat_node.add_child(node)
+            parent_node = TopicNode(source_id=zip_file,
+                                    title=title.text,
+                                    description="")
+            cat_node.add_child(parent_node)
+            for node in mininode.ZipHandler(zip_file).get_nodes():
+                parent_node.add_child(node)
 
         def show_node(node):
             for child in node.children:

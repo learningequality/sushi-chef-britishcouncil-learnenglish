@@ -132,6 +132,7 @@ def guess_type(content_type="",
                magic=b""):
     
     content_mapping = {"audio/mp3": AudioFile,
+                       "audio/mpeg": AudioFile,
                        "video/mp4": VideoFile,
                        "audio/mp4": VideoFile,
                        "application/pdf": DocumentFile,

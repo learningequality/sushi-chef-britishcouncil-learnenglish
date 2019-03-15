@@ -18,6 +18,7 @@ add_file.metadata = {"license": SpecialPermissionsLicense("British Council", "Sp
 IGNORE_LIST = """
 text/
 image/
+application/
 """.strip().split("\n")
 
 WANTED_LIST = """
@@ -25,6 +26,10 @@ video/
 application/pdf
 audio/
 """.strip().split("\n")
+
+EXCLUDE_LIST = """
+video/webm
+"""
 
 try:
   os.rmdir("__mini")
@@ -52,9 +57,12 @@ class ZipHandler(object):
         mime = magic.from_buffer(self.my_zip.open(url).read(1024), mime=True)
         ignore = any([mime.startswith(x) for x in IGNORE_LIST])
         wanted = any([mime.startswith(x) for x in WANTED_LIST])
-        if ignore:
+        exclude = any([mime.startswith(x) for x in EXCLUDE_LIST])
+        if exclude:
             return None
-        assert wanted, mime
+        if not wanted:
+            assert ignore, mime
+            return None
         with self.my_zip.open(url) as f:
            target = "__mini/" + counter()
            with open(target, "wb") as ff:
